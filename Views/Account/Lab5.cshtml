@@ -1,0 +1,53 @@
+@model WebApplication1.Viewmodels.LabUserViewModel
+@* @model IEnumerable<WebApplication1.Viewmodels.LabUserViewModel> *@
+<h1 class="text-center">Lab5</h1>
+
+@* <div>
+    @Model.UserID
+    @Model.Name
+    @Model.Lastname
+    @Model.Address
+    @Model.Weight
+    @Model.Height
+    @Model.Age
+</div> *@
+
+@* <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>UserID</th>
+            <th>Name</th>
+            <th>Lastname</th>
+            <th>Address</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.UserID</td>
+                <td>@item.Name</td>
+                <td>@item.Lastname</td>
+                <td>@item.Address</td>
+                <td>@item.Weight</td>
+                <td>@item.Height</td>
+                <td>@item.Age</td>
+            </tr>
+        }
+    </tbody>
+</table> *@
+
+<form asp-controller="Account" asp-action="Lab5">
+    Password_hash <input type="text" asp-for="Password_hash" class="form-control"/>
+    Name <input type="text" asp-for="Name" class="form-control" />
+    Lastname <input type="text" asp-for="Lastname" class="form-control" />
+    <button class="btn btn-success">Submit</button>
+</form>
+<div>
+    @ViewBag.UserID
+    @ViewBag.Name
+    @ViewBag.Lastname
+</div>

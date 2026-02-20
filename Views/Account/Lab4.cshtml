@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table class="table table-bordered table-hover" style="text-align: center;">
+        <thead>
+            <th>userNo</th>
+            <th>User</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Role</th>
+        </thead>
+        <tbody>
+            <tr class="table-primary">
+                <td>1</td>
+                <td>John</td>
+                <td>25</td>
+                <td>john@example.com</td>
+                <td>123 Main St</td>
+                <td>User</td>
+            </tr>
+            <tr class="table-secondary">
+                <td>2</td>
+                <td>Aomsin</td>
+                <td>22</td>
+                <td>aomsin@example.com</td>
+                <td>456 Side St</td>
+                <td>Admin</td>
+            </tr>
+            <tr class="table-success">
+                <td>3</td>
+                <td>Mary</td>
+                <td>30</td>
+                <td>mary@example.com</td>
+                <td>789 Oak St</td>
+                <td>User</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">รวม 3 แถว</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="container">
+        <div class="row g-3">
+            <div class="card h-100">
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <h3 class="card-header">ตะกร้าสาน</h3>
+                    <div class="card-body">
+                        <h3 class="card-title">ราคา</h3>
+                        <p class="card-text">ส่วนเนื้อหาของ Card</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <h3 class="card-header">กำไล</h3>
+                    <div class="card-body">
+                        <h3 class="card-title">ราคา</h3>
+                        <p class="card-text">ส่วนเนื้อหาของ Card</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <h3 class="card-header">เครื่องประดับ</h3>
+                    <div class="card-body">
+                        <h3 class="card-title">ราคา</h3>
+                        <p class="card-text">ส่วนเนื้อหาของ Card</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Password:</label>
+                <input type="password" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Number</label>
+                <input type="number" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Tel</label>
+                <input type="tel" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Search</label>
+                <input type="search" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">URL</label>
+                <input type="url" class="form-control" />
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">File</label>
+                <input type="file" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Radio Button</label>
+                <input type="radio" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Checkbox</label>
+                <input type="checkbox" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form asp-controller="Account" asp-action="Lab4">
+            <div class="mb-3">
+                <label class="form-label">Color</label>
+                <input type="color" class="form-control" />
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
