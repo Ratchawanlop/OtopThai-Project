@@ -1,48 +1,72 @@
-@model WebApplication1.Viewmodels.LabUserViewModel
+@model WebApplication1.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "เข้าสู่ระบบ";
+}
 
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4 p-md-5">
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="align-items-center"
-         style="border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 350px; margin: auto;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt=""
-             style="width: 100px; height: 100px; display: block; margin-left: auto; margin-right: auto;">
-        <h3 class="text-center">เข้าสู่ระบบ</h3>
-        <form asp-controller="Account" asp-action="Login">
-            <div class="row align-items-center mb-3">
-                <div class="col">
-                    <label class="col-form-label">เบอร์ :</label>
-                    <input type="text" asp-for="Phone_number" class="form-control" />
-                </div>
-
-                <div class="row align-items-center mb-3">
-                    <div class="col">
-                        <label class="col-form-label">รหัสผ่าน :</label>
-                        <input type="password" asp-for="Password_hash" class="form-control" />
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold font-serif" style="color: var(--otop-green);">ยินดีต้อนรับกลับมา</h2>
+                        <p class="text-muted">เข้าสู่ระบบเพื่อดำเนินการต่อ</p>
                     </div>
-                </div>
-                <div class="row justify-content-center mb-3">
-                    <span class="row ">
-                        <button type="button" class="btn btn-link btn-sm">ลืมรหัสผ่าน</button>
-                    </span>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <button type="button" class="btn btn-link">สมัครสมาชิก</button>
-                </div>
 
-            </form>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small rounded-3"
+                         style="display:@(ViewContext.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                        <div class="mb-3">
+                            <label asp-for="Phone_number" class="form-label fw-semibold">เบอร์โทรศัพท์</label>
+                            <div class="input-group input-group-lg"> 
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-telephone text-muted"></i>
+                                </span>
+                                <input asp-for="Phone_number" class="form-control bg-light border-start-0 ps-0"
+                                       placeholder="08X-XXX-XXXX" maxlength="10" />
+                            </div>
+                            <span asp-validation-for="Phone_number" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label asp-for="Password" class="form-label fw-semibold">รหัสผ่าน</label>
+                                <a href="#" class="small text-decoration-none"
+                                   style="color: var(--otop-gold);">ลืมรหัสผ่าน?</a>
+                            </div>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input asp-for="Password" type="password"
+                                       class="form-control bg-light border-start-0 ps-0" placeholder="••••••••" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input asp-for="RememberMe" class="form-check-input border-secondary" />
+                            <label asp-for="RememberMe" class="form-check-label text-muted small">จดจำการเข้าสู่ระบบ</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-otop btn-lg w-100 fw-bold rounded-pill shadow-sm">
+                            เข้าสู่ระบบ
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted small">ยังไม่มีบัญชีใช่ไหม?</span>
+                        <a asp-controller="Account" asp-action="Register"
+                           class="small fw-bold text-decoration-none ms-1"
+                           style="color: var(--otop-green);">สมัครสมาชิกที่นี่</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </body>
-
-</html>
+    </div>
+</div>
