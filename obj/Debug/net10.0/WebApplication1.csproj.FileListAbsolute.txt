@@ -192,3 +192,4 @@ C:\Users\gmrz1\OneDrive\เดสก์ท็อป\ปี3 เทอม2\CSI402
 C:\Users\gmrz1\OneDrive\เดสก์ท็อป\ปี3 เทอม2\CSI402\WebApplication1\WebApplication1\obj\Debug\net10.0\WebApplication1.pdb
 C:\Users\gmrz1\OneDrive\เดสก์ท็อป\ปี3 เทอม2\CSI402\WebApplication1\WebApplication1\obj\Debug\net10.0\WebApplication1.genruntimeconfig.cache
 C:\Users\gmrz1\OneDrive\เดสก์ท็อป\ปี3 เทอม2\CSI402\WebApplication1\WebApplication1\obj\Debug\net10.0\ref\WebApplication1.dll
+C:\Users\gmrz1\OneDrive\เดสก์ท็อป\ปี3 เทอม2\CSI402\WebApplication1\WebApplication1\obj\Debug\net10.0\WebApplication1.sourcelink.json
