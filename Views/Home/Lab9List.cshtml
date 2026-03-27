@@ -1,0 +1,31 @@
+@using Microsoft.AspNetCore.Http.Features
+@{
+    Layout = "_Aomsin";
+}
+@model IEnumerable<WebApplication1.ViewModels.Lab9User>
+
+<div>
+    <table class="table table-bordered tabel-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Password</th>
+                <th>Name</th>
+                <th>Lastname</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.UserId</td>
+                    <td>@student.Password</td>
+                    <td>@student.Name</td>
+                    <td>@student.Lastname</td>
+                    <td><a asp-route-UID="@student.UserId" asp-action="Lab10" asp-controller="Home">Edit</a>
+                    <a asp-route-UID="@student.UserId" asp-action="Lab10D" asp-controller="Home">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div>

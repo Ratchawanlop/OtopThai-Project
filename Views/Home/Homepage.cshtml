@@ -1,38 +1,168 @@
 @{
     Layout = "_Aomsin";
+    ViewData["Title"] = "หน้าแรก";
 }
-<div class="text-center" style="border: 1px">
-    <h1>Welcome to สินค้า Otop</h1>
+
+<div id="promoCarousel" class="carousel slide mb-5 shadow-sm" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner rounded" style="background-color: var(--otop-green); color: white;">
+        <div class="carousel-item active py-5 text-center">
+            <div class="py-5">
+                <i class="bi bi-truck display-1 text-warning mb-3"></i>
+                <h1 class="fw-bold">ส่งฟรีทั่วไทย!!</h1>
+                <p class="fs-4">เมื่อซื้อสินค้าครบ 1,000 บาทขึ้นไป</p>
+                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ช้อปเลย</a>
+            </div>
+        </div>
+        <div class="carousel-item py-5 text-center">
+            <div class="py-5">
+                <i class="bi bi-basket display-1 text-warning mb-3"></i>
+                <h1 class="fw-bold">ลดทันที 10%</h1>
+                <p class="fs-4">สำหรับสินค้างานสานและผ้าทอมือ เมื่อซื้อครบ 2,000 บาท</p>
+                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ดูสินค้างานสาน</a>
+            </div>
+        </div>
+        <div class="carousel-item py-5 text-center">
+            <div class="py-5">
+                <i class="bi bi-gift display-1 text-warning mb-3"></i>
+                <h1 class="fw-bold">ของที่ระลึกลด 7%</h1>
+                <p class="fs-4">เพียงซื้อสินค้าหมวดของที่ระลึกครบ 1,000 บาท</p>
+                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ดูของที่ระลึก</a>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
 </div>
-<div class="container-fluid">
-    <div class="text-center">
-        <h1>OTOP คืออะไร?</h1>
-        <p class="text-start">OTOP ย่อมาจาก คำว่า “One Tambon One Product” ซึ่งแปลเป็นไทยคือ “หนึ่งตำบล หนึ่งผลิตภัณฑ์”
-            เป็นโครงการที่มีวัตถุประสงค์ในการส่งเสริมและพัฒนาการผลิต สินค้าท้องถิ่น ในระดับตำบลของประเทศไทย
-            โดยเน้นการนำความเป็นเอกลักษณ์ของแต่ละพื้นที่มาพัฒนาเป็น ผลิตภัณฑ์ OTOP ที่มีคุณค่าและความน่าสนใจ
-            เพื่อเสริมสร้างรายได้ให้กับชุมชนท้องถิ่น โดยเป้าหมายของโครงการคือการสร้างชุมชนที่มั่งคั่งและยั่งยืน
-            ผ่านการทำธุรกิจผลิตภัณฑ์ท้องถิ่นที่มีคุณภาพและเอกลักษณ์เฉพาะตัวของแต่ละพื้นที่
-            โครงการนี้เป็นส่วนสำคัญมากในการส่งเสริมเศรษฐกิจท้องถิ่นและการปรับปรุงคุณภาพชีวิตของชุมชนที่เข้าร่วมโครงการนี้
+
+<div class="container mb-5 text-center">
+    <h3 class="fw-bold mb-4" style="color: var(--otop-green);">หมวดหมู่สินค้าของเรา</h3>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-3 col-6">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="p-4 bg-white rounded shadow-sm border card-product">
+                    <i class="bi bi-basket3 fs-1 text-success mb-2"></i>
+                    <h5 class="mt-2">งานสาน</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="p-4 bg-white rounded shadow-sm border card-product">
+                    <i class="bi bi-scissors fs-1 text-danger mb-2"></i>
+                    <h5 class="mt-2">ผ้าทอมือ</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="p-4 bg-white rounded shadow-sm border card-product">
+                    <i class="bi bi-gift fs-1 text-warning mb-2"></i>
+                    <h5 class="mt-2">ของที่ระลึก</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0" style="color: var(--otop-green);">สินค้ายอดนิยม</h3>
+        <a href="#" class="text-success text-decoration-none">ดูทั้งหมด <i class="bi bi-arrow-right"></i></a>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm card-product">
+                <img src="https://www.otopchiangmai.com/uploads/3002e6a26cbe255e70924eb483737a9e.jpg" class="card-img-top" alt="กระเป๋าสาน" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6">กระเป๋าสาน</h5>
+                    <p class="text-success fw-bold fs-5 mb-2">฿490</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm card-product">
+                <img src="https://mpics.mgronline.com/pics/Images/551000001738201.JPEG" class="card-img-top" alt="ผ้าถุงทอมือ" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6">ผ้าถุงทอมือ</h5>
+                    <p class="text-success fw-bold fs-5 mb-2">฿650</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm card-product">
+                <img src="https://otopth.com/wp-content/uploads/2023/08/Untitled-3-300x164.png" class="card-img-top" alt="ชุดเซ็ตสมุนไพร" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6">ชุดเซ็ตสมุนไพร</h5>
+                    <p class="text-success fw-bold fs-5 mb-2">฿390</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm card-product">
+                <img src="https://www.otopchiangmai.com/uploads/8c9e2ace19000131f84330f718b7f327.jpg" class="card-img-top" alt="ตุ๊กตา Re-cycle" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6">ตุ๊กตา Re-cycle</h5>
+                    <p class="text-success fw-bold fs-5 mb-2">฿299</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-white py-5 mt-5 border-top shadow-sm">
+    <div class="container text-center py-4">
+        <h6 class="text-warning fw-bold mb-2" style="letter-spacing: 2px;">WELCOME TO สินค้า OTOP</h6>
+        <h2 class="fw-bold mb-4" style="color: var(--otop-green);">OTOP คืออะไร?</h2>
+        
+        <p class="text-muted mx-auto mb-5" style="max-width: 800px; line-height: 1.8; font-size: 1.1rem;">
+            <strong>OTOP</strong> ย่อมาจาก คำว่า <strong>“One Tambon One Product”</strong> ซึ่งแปลเป็นไทยคือ “หนึ่งตำบล หนึ่งผลิตภัณฑ์” 
+            เป็นโครงการที่มีวัตถุประสงค์ในการส่งเสริมและพัฒนาการผลิตสินค้าท้องถิ่นในระดับตำบลของประเทศไทย 
+            โดยเน้นการนำความเป็นเอกลักษณ์ของแต่ละพื้นที่มาพัฒนาเป็น <strong>ผลิตภัณฑ์ OTOP</strong> ที่มีคุณค่าและความน่าสนใจ 
+            เพื่อเสริมสร้างรายได้ให้กับชุมชนท้องถิ่น
         </p>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="overflow-hidden rounded shadow-sm">
+                    <img src="https://nst.or.th/wp-content/uploads/2024/03/people-wearing-asian-conical-hats-while-sitting-bamboo-bench_181624-13569_11zon.webp" 
+                         class="img-fluid w-100" alt="งานสานท้องถิ่น" 
+                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
+                         onmouseover="this.style.transform='scale(1.08)'" 
+                         onmouseout="this.style.transform='scale(1)'" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="overflow-hidden rounded shadow-sm">
+                    <img src="https://www.khoksumrongmuni.go.th/wp-content/uploads/2023/02/DSCF5532-scaled-2.jpg" 
+                         class="img-fluid w-100" alt="งานผ้าทอมือ" 
+                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
+                         onmouseover="this.style.transform='scale(1.08)'" 
+                         onmouseout="this.style.transform='scale(1)'" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="overflow-hidden rounded shadow-sm">
+                    <img src="https://fa2.naxapi.com/phaikhodon.go.th/dnm_file/news/1726736433310_g395521.jpg" 
+                         class="img-fluid w-100" alt="ของที่ระลึก" 
+                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
+                         onmouseover="this.style.transform='scale(1.08)'" 
+                         onmouseout="this.style.transform='scale(1)'" />
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4">
-            <img src="https://www.otopchiangmai.com/uploads/3002e6a26cbe255e70924eb483737a9e.jpg" class="img-fluid"
-                 alt="Otop Image 1" />
-        </div>
-        <div class="col-sm-4">
-            <img src="https://mpics.mgronline.com/pics/Images/551000001738201.JPEG" class="img-fluid"
-                 alt="Otop Image 2" />
-        </div>
-        <div class="col-sm-4">
-            <img src="https://otopth.com/wp-content/uploads/2023/08/Untitled-3-300x164.png" class="img-fluid"
-                 alt="Otop Image 3" />
-        </div>
-    </div>
-<div>
-    @ViewBag.Phone_number
-    @ViewBag.Password_hash
-</div>
 </div>

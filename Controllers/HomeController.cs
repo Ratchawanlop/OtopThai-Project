@@ -1,11 +1,100 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
 using System.Diagnostics;
+using System.Xml;
+using WebApplication1.Models;
+using WebApplication1.Models.Db;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly Csi402dbContext _db;
+
+    public HomeController(Csi402dbContext db)
+    {
+        _db = db;
+    }
+
+    public IActionResult Cart()
+    {
+        return View();
+    }
+
+    public IActionResult Product()
+    {
+        return View();
+    }
+
+    public IActionResult Lab10(string UID)
+    {
+        var check = (from us in _db.Labstudents where us.StdId == UID select new Lab9User
+        {
+            UserId = us.StdId,
+            Password = us.StdPassword,
+            Name = us.StdName,
+            Lastname = us.StdKastname
+        }).FirstOrDefault();
+
+        return View(check);
+    }
+    [HttpPost]
+    public IActionResult Lab10(Lab9User data)
+    {
+        var user = (from u in _db.Labstudents where u.StdId == data.UserId select u).FirstOrDefault();
+
+        user.StdName = data.Name;
+        user.StdKastname = data.Lastname;
+        user.StdPassword = data.Password;
+
+        _db.Update(user);
+        _db.SaveChanges();
+        return RedirectToAction("Lab9List", "Home");
+    }
+    public IActionResult Lab10D (string UID)
+    {
+        var user = (from u in _db.Labstudents where u.StdId == UID select u).FirstOrDefault();
+        _db.RemoveRange(user);
+        _db.SaveChanges();
+        return RedirectToAction("Lab9List", "Home");
+    }
+
+
+    public IActionResult Lab9()
+    {
+        return View();
+    }
+    [HttpPost]
+    public IActionResult Lab9(Lab9User data)
+    {
+        var u = new Labstudent();
+        u.StdId = data.UserId;
+        u.StdName = data.Name;
+        u.StdKastname = data.Lastname;
+        u.StdPassword = data.Password;
+        _db.Add(u);
+        _db.SaveChanges();
+        return RedirectToAction("Lab9List", "Home");
+    }
+
+    public IActionResult Lab9List()
+    {
+        var user = (from u in _db.Labstudents select new Lab9User
+        {
+            UserId = u.StdId,
+            Password = u.StdPassword,
+            Name = u.StdName,
+            Lastname = u.StdKastname
+        }).ToList();
+        return View(user);
+    }
+
+    public IActionResult Lab8()
+    {
+        var user = (from u in _db.Users select u).ToList();
+        return View(user);
+    }
+
     public IActionResult SPU()
     {
         string name = "ราชวัลลภ นาว์เพ็ชร์";

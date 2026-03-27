@@ -1,0 +1,139 @@
+@{
+    Layout = "_Aomsin.cshtml";
+    ViewData["Title"] = "ตะกร้าสินค้า";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4" style="color: var(--otop-green);">ตะกร้าสินค้า (ใบรายการสั่งซื้อ)</h2>
+
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-start ps-4">ชื่อสินค้า</th>
+                                    <th>ราคาต่อชิ้น</th>
+                                    <th>จำนวน</th>
+                                    <th>รวม (บาท)</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">สรุปยอดคำสั่งซื้อ</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>ยอดรวมสินค้า:</span>
+                        <span id="subtotalPrice">฿0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success">
+                        <span>ส่วนลด (ถ้ามี):</span>
+                        <span id="discountPrice">-฿0.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold fs-5">ยอดที่ต้องชำระ:</span>
+                        <span class="fw-bold fs-5 text-danger" id="totalPrice">฿0.00</span>
+                    </div>
+                    
+                    <a asp-controller="Home" asp-action="Payment" class="btn btn-success w-100 rounded-pill py-2 fw-bold fs-5">
+                        ยืนยันและไปหน้าชำระเงิน
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cartTableBody = document.getElementById('cartTableBody');
+            let cart = JSON.parse(localStorage.getItem('otop_cart')) || [];
+
+            function renderCart() {
+                cartTableBody.innerHTML = '';
+                let subtotal = 0;
+
+                if (cart.length === 0) {
+                    cartTableBody.innerHTML = '<tr><td colspan="5" class="py-5 text-muted">ยังไม่มีสินค้าในตะกร้าของคุณ</td></tr>';
+                    document.getElementById('subtotalPrice').innerText = '฿0.00';
+                    document.getElementById('totalPrice').innerText = '฿0.00';
+                    updateBadge(0);
+                    return;
+                }
+
+                cart.forEach((item, index) => {
+                    let itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
+
+                    cartTableBody.innerHTML += `
+                        <tr>
+                            <td class="text-start ps-4 fw-medium">${item.name}</td>
+                            <td>฿${item.price}</td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm text-center mx-auto qty-input" 
+                                       style="width: 70px;" value="${item.quantity}" min="1" data-index="${index}">
+                            </td>
+                            <td class="text-success fw-bold">฿${itemTotal}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger btn-remove" data-index="${index}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('subtotalPrice').innerText = '฿' + subtotal.toFixed(2);
+                document.getElementById('totalPrice').innerText = '฿' + subtotal.toFixed(2);
+                
+                let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                updateBadge(totalItems);
+            }
+
+            function updateBadge(total) {
+                const cartBadge = document.getElementById('cartBadge');
+                if(cartBadge) {
+                    cartBadge.innerText = total;
+                    cartBadge.style.display = total > 0 ? 'inline-block' : 'none'; 
+                }
+            }
+
+            cartTableBody.addEventListener('change', function(e) {
+                if(e.target.classList.contains('qty-input')) {
+                    const index = e.target.getAttribute('data-index');
+                    const newQty = parseInt(e.target.value);
+                    if(newQty > 0) {
+                        cart[index].quantity = newQty;
+                        localStorage.setItem('otop_cart', JSON.stringify(cart));
+                        renderCart();
+                    }
+                }
+            });
+
+            cartTableBody.addEventListener('click', function(e) {
+                const btn = e.target.closest('.btn-remove');
+                if(btn) {
+                    const index = btn.getAttribute('data-index');
+                    cart.splice(index, 1); 
+                    localStorage.setItem('otop_cart', JSON.stringify(cart));
+                    renderCart();
+                }
+            });
+
+            renderCart();
+        });
+    </script>
+}

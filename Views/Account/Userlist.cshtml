@@ -1,143 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "User List";
+}
+@model IEnumerable<WebApplication1.Models.Db.User>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
+<div class="container mt-4">
     <div>
         <h3 class="text-start"><strong>User List</strong></h3>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
         <span class="float-end mb-3">
-            <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-success">Add User</a>
+            <a asp-controller="Account" asp-action="AddUser" class="btn btn-sm btn-success">Add User</a>
         </span>
-        <div>
-            <form asp-controller="Account" asp-action="Search">
-                <label for=""></label>
+        <div class="mb-3">
+            <form asp-controller="Account" asp-action="Search" method="get">
                 <input type="text" name="keyword" class="form-control" style="width: 250px; display: inline-block;"
-                    placeholder="Search by name or phone..." />
+                       placeholder="Search by name or phone..." />
                 <button type="submit" class="btn btn-primary btn-sm">Search</button>
             </form>
         </div>
     </div>
-    <table class="table table-bordered table-hover"
-        style="text-align: center;  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <thead>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Role</th>
-            <th>Action</th>
+
+    <table class="table table-bordered table-hover align-middle"
+           style="text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <thead class="table-light">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>0812345678</td>
-                <td>john.doe@example.com</td>
-                <td>123 Main St, City</td>
-                <td>User</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Jane Smith</td>
-                <td>0898765432</td>
-                <td>jane.smith@example.com</td>
-                <td>456 Oak Ave, Town</td>
-                <td>Admin</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Bob Johnson</td>
-                <td>0855555555</td>
-                <td>bob.johnson@example.com</td>
-                <td>789 Pine Rd, Village</td>
-                <td>User</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Ratchawanlop</td>
-                <td>0877777777</td>
-                <td>Rat@example.com</td>
-                <td>321 Elm St, Suburb</td>
-                <td>Admin</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.Username</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Email</td>
+                        <td>@user.AddressMain</td>
+                        <td>
+                            @(user.RoleId == 1 ? "User" : "Admin")
+                        </td>
+                        <td>
+                            <a asp-controller="Account" asp-action="EditUser" asp-route-id="@user.UserId"
+                                   class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a asp-controller="Account" asp-action="DeleteUser" asp-route-id="@user.UserId"
+                                   class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-muted">ไม่มีข้อมูลผู้ใช้งานในระบบ</td>
+                </tr>
+            }
         </tbody>
-        <tfoot></tfoot>
-        <tr>
-            <th colspan="7">Total Users: 4</th>
-        </tr>
+        <tfoot>
+            <tr>
+                <th colspan="7" class="text-start bg-light">
+                    Total Users: @(Model?.Count() ?? 0)
+                </th>
+            </tr>
         </tfoot>
     </table>
-
-
-    <h3>เพิ่มผู้ใช้ใหม่</h3>
-    <form asp-controller="Account" asp-action="Register">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <label class="col-form-label">ชื่อ :</label>
-                <input type="text" class="form-control" />
-            </div>
-    </form>
-    <form asp-controller="Account" asp-action="Register">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <label class="col-form-label">เบอร์ :</label>
-                <input type="tel" class="form-control" />
-            </div>
-    </form>
-    <form asp-controller="Account" asp-action="Register">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <label class="col-form-label">รหัสผ่าน :</label>
-                <input type="password" class="form-control" />
-            </div>
-    </form>
-    <form asp-controller="Account" asp-action="Register">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <label class="col-form-label">อีเมล :</label>
-                <input type="email" class="form-control" />
-            </div>
-        </div>
-    </form>
-    <form asp-controller="Account" asp-action="Register">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <label class="col-form-label">Role :</label>
-                <select type="dropdown" class="form-control" />
-                <option>User</option>
-                <option>Admin</option>
-                </select>
-            </div>
-        </div>
-    </form>
-    <div class="row justify-content-center mb-3">
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary">เพิ่มผู้ใช้</button>
-        </div>
-    </div>
-    </div>
-</body>
-
-</html>
+</div>

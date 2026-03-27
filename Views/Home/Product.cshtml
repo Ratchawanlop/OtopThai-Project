@@ -1,0 +1,175 @@
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "หน้าแรก";
+}
+
+<div class="container py-5">
+    <div class="row align-items-center mb-4 pb-3 border-bottom">
+        <div class="col-md-4 mb-3 mb-md-0">
+            <h3 class="fw-bold mb-0" style="color: var(--otop-green);">สินค้า OTOP ทั้งหมด</h3>
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex flex-column flex-md-row justify-content-md-end gap-3">
+                <div class="input-group" style="max-width: 300px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="ค้นหาสินค้า...">
+                </div>
+                <select id="sortFilter" class="form-select w-auto text-secondary fw-medium shadow-sm">
+                    <option value="latest">สินค้าล่าสุด</option>
+                    <option value="price-asc">ราคา: ต่ำ - สูง</option>
+                    <option value="price-desc">ราคา: สูง - ต่ำ</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="productGrid">
+        
+        <div class="col-md-3 col-sm-6 product-item" data-id="1" data-price="490" data-name="กระเป๋าสาน">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
+                <img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?w=400&h=300&fit=crop" class="card-img-top" alt="กระเป๋าสาน" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">กระเป๋าสาน</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿490</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="2" data-price="390" data-name="ตะกร้าสาน">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
+                <img src="https://images.unsplash.com/photo-1585644833215-288295b92ee9?w=400&h=300&fit=crop" class="card-img-top" alt="ตะกร้าสาน" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">ตะกร้าสาน</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿390</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="3" data-price="290" data-name="รองเท้าสาน">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
+                <img src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?w=400&h=300&fit=crop" class="card-img-top" alt="รองเท้าสาน" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">รองเท้าสาน</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿290</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="4" data-price="650" data-name="ผ้าถุงทอมือ">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
+                <img src="https://images.unsplash.com/photo-1620783770629-122b7f187703?w=400&h=300&fit=crop" class="card-img-top" alt="ผ้าถุงทอมือ" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">ผ้าถุงทอมือ</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿650</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="5" data-price="350" data-name="เสื้อผ้าทอมือ">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
+                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=300&fit=crop" class="card-img-top" alt="เสื้อผ้าทอมือ" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">เสื้อผ้าทอมือ</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿350</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="6" data-price="350" data-name="กางเกงผ้าทอมือ">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
+                <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop" class="card-img-top" alt="กางเกงผ้าทอมือ" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">กางเกงผ้าทอมือ</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿350</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="7" data-price="190" data-name="สร้อยข้อมือ">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 z-1">ของที่ระลึก</span>
+                <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=300&fit=crop" class="card-img-top" alt="สร้อยข้อมือ" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">สร้อยข้อมือ</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿190</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 product-item" data-id="8" data-price="299" data-name="ตุ๊กตา Re-cycle">
+            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
+                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 z-1">ของที่ระลึก</span>
+                <img src="https://images.unsplash.com/photo-1558066557-0b19672bbce2?w=400&h=300&fit=crop" class="card-img-top" alt="ตุ๊กตา Re-cycle" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fs-6 text-dark">ตุ๊กตา Re-cycle</h5>
+                    <p class="text-success fw-bold fs-5 mb-3">฿299</p>
+                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const sortFilter = document.getElementById('sortFilter');
+            const productGrid = document.getElementById('productGrid');
+            // แปลง NodeList ของสินค้าให้เป็น Array เพื่อให้ง่ายต่อการเรียง
+            let products = Array.from(document.querySelectorAll('.product-item'));
+
+            // ระบบค้นหา (Search)
+            searchInput.addEventListener('input', function (e) {
+                const keyword = e.target.value.toLowerCase();
+                products.forEach(product => {
+                    const productName = product.getAttribute('data-name').toLowerCase();
+                    if (productName.includes(keyword)) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            });
+
+            // ระบบเรียงลำดับ (Filter / Sort)
+            sortFilter.addEventListener('change', function (e) {
+                const sortType = e.target.value;
+
+                products.sort((a, b) => {
+                    const priceA = parseFloat(a.getAttribute('data-price'));
+                    const priceB = parseFloat(b.getAttribute('data-price'));
+                    const idA = parseInt(a.getAttribute('data-id'));
+                    const idB = parseInt(b.getAttribute('data-id'));
+
+                    if (sortType === 'price-asc') {
+                        return priceA - priceB; // ราคา ต่ำไปสูง
+                    } else if (sortType === 'price-desc') {
+                        return priceB - priceA; // ราคา สูงไปต่ำ
+                    } else {
+                        return idB - idA; //
+                    }
+                });
+
+                productGrid.innerHTML = '';
+                products.forEach(product => productGrid.appendChild(product));
+            });
+            
+            sortFilter.dispatchEvent(new Event('change'));
+        });
+    </script>
+}
