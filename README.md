@@ -41,7 +41,7 @@
 
 ### 2. ขั้นตอนการติดตั้ง (Installation)
 
-1. **Clone Repository นี้ลงเครื่องของคุณ:**
+1. **Clone Repository นี้ลงเครื่อง:**
    ```bash
    git clone [https://github.com/Ratchawanlop/OtopThai-Project.git](https://github.com/Ratchawanlop/OtopThai-Project.git)
    cd OtopThai-Project
