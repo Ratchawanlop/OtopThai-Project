@@ -23,13 +23,15 @@
         font-size: 0.95rem;
     }
 
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
         border: 1px solid #dee2e6;
         border-radius: 8px;
         padding: 10px 15px;
     }
 
-    .form-control:focus, .form-select:focus {
+    .form-control:focus,
+    .form-select:focus {
         border-color: #4a6f4b;
         box-shadow: 0 0 0 0.25rem rgba(74, 111, 75, 0.25);
     }
@@ -65,66 +67,81 @@
                 <p class="text-muted small">ระบบจัดการข้อมูลสมาชิกสำหรับผู้ดูแลระบบ</p>
             </div>
             
-            <form asp-controller="Account" asp-action="Register" method="post">
+            <form asp-controller="Account" asp-action="AddUser" method="post">
                 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">ชื่อผู้ใช้ (Username) <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
-                        <input type="text" name="Username" class="form-control" required placeholder="ระบุชื่อผู้ใช้งาน" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">เบอร์โทรศัพท์ <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">ชื่อผู้ใช้ (Username) <span
+                        class="text-danger">*</span></label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
-                            <input type="tel" name="Phone_number" class="form-control" required placeholder="08X-XXX-XXXX" />
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                            <input type="text" name="Username" class="form-control" required
+                                   placeholder="ระบุชื่อผู้ใช้งาน" />
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">รหัสผ่าน <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="bi bi-key"></i></span>
-                            <input type="password" name="Password_hash" class="form-control" required placeholder="กำหนดรหัสผ่าน" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">เบอร์โทรศัพท์ <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" name="Phone_number" class="form-control" required
+                                       placeholder="08X-XXX-XXXX" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">รหัสผ่าน <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-key"></i></span>
+                                <input type="password" name="Password_hash" class="form-control" required
+                                       placeholder="กำหนดรหัสผ่าน" />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">อีเมล <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
-                        <input type="email" name="Email" class="form-control" required placeholder="example@email.com" />
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">อีเมล <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="Email" class="form-control" required
+                                   placeholder="example@email.com" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">ที่อยู่ (Address)</label>
-                    <textarea name="AddressMain" class="form-control" rows="2" placeholder="ระบุที่อยู่ของสมาชิก..."></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">ที่อยู่ (Address)</label>
+                        <textarea name="AddressMain" class="form-control" rows="2"
+                                  placeholder="ระบุที่อยู่ของสมาชิก..."></textarea>
+                    </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">สิทธิ์การใช้งาน (Role) <span class="text-danger">*</span></label>
-                    <select name="RoleId" class="form-select fw-bold" required>
-                        <option value="1">User (ผู้ใช้งานทั่วไป)</option>
-                        <option value="2" class="text-danger">Admin (ผู้ดูแลระบบ)</option>
-                    </select>
-                </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">สิทธิ์การใช้งาน (Role) <span
+                            class="text-danger">*</span></label>
+                            <select name="RoleId" class="form-select fw-bold" required>
+                                <option value="1">User (ผู้ใช้งานทั่วไป)</option>
+                                <option value="2" class="text-danger">Admin (ผู้ดูแลระบบ)</option>
+                            </select>
+                        </div>
 
-                <hr class="my-4 text-muted">
+                        <hr class="my-4 text-muted">
 
-                <div class="d-flex justify-content-end mt-2">
-                    <a asp-controller="Account" asp-action="UserList" class="btn btn-light border px-4 btn-admin-cancel fw-bold me-2">
-                        ยกเลิก
-                    </a>
-                    <button type="submit" class="btn btn-admin-save px-4 fw-bold">
-                        <i class="bi bi-save me-1"></i> บันทึกข้อมูล
-                    </button>
-                </div>
-            </form>
+                        <div class="d-flex justify-content-end mt-2">
+                            <a asp-controller="Account" asp-action="UserList"
+                                   class="btn btn-light border px-4 btn-admin-cancel fw-bold me-2">
+                                ยกเลิก
+                            </a>
+                            <button type="submit" class="btn btn-admin-save px-4 fw-bold">
+                                <i class="bi bi-save me-1"></i> บันทึกข้อมูล
+                            </button>
+                        </div>
+                    </form>
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
             
+                </div>
+            </div>
         </div>
-    </div>
-</div>

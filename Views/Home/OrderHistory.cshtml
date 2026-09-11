@@ -1,0 +1,311 @@
+@model IEnumerable<WebApplication1.Models.Db.Order>
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "ประวัติการสั่งซื้อ";
+}
+
+<style>
+    body { background-color: #fbfaf6; } 
+    
+    .order-card { 
+        border-radius: 12px; 
+        border: 1px solid #e5e5e5; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+    
+    .order-header { 
+        background-color: #244634; 
+        color: white; 
+        padding: 15px 25px; 
+    }
+    
+    .status-badge { 
+        background-color: rgba(255,255,255,0.2); 
+        border-radius: 50px; 
+        padding: 6px 16px; 
+        font-size: 0.85rem; 
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .product-img { 
+        width: 65px; 
+        height: 65px; 
+        object-fit: cover; 
+        border-radius: 8px; 
+        border: 1px solid #eee;
+    }
+
+    .btn-otop { 
+        background-color: #244634; 
+        color: white; 
+        border-radius: 50px; 
+        padding: 8px 24px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    .btn-otop:hover { background-color: #1a3325; color: white; transform: translateY(-2px); }
+
+    .filter-container {
+        background: white;
+        border-radius: 15px;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+
+    .filter-scroll {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
+        padding: 5px;
+    }
+
+    .filter-scroll::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+        padding: 8px 18px;
+        border-radius: 50px;
+        border: 1px solid #eee;
+        background: #f8f9fa;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-pill:hover { background: #e9ecef; }
+
+    .filter-pill.active {
+        background: #244634;
+        color: white;
+        border-color: #244634;
+        box-shadow: 0 4px 10px rgba(36, 70, 52, 0.2);
+    }
+
+    .filter-count {
+        background: rgba(0,0,0,0.1);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+
+    .filter-pill.active .filter-count { background: rgba(255,255,255,0.2); }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            
+            <h3 class="fw-bold mb-4" style="color: #244634;">
+                <i class="bi bi-clock-history me-2"></i>ประวัติการสั่งซื้อของคุณ
+            </h3>
+
+            <div class="filter-container">
+                <div class="filter-scroll">
+                    <div class="filter-pill active" data-filter="all">
+                        <span>ทั้งหมด</span>
+                        <span class="filter-count">@Model.Count()</span>
+                    </div>
+                    <div class="filter-pill" data-filter="Pending">
+                        <i class="bi bi-wallet2"></i> รอชำระเงิน
+                        <span class="filter-count">@Model.Count(x => x.TrackingStatus == "WaitingForPayment" || x.TrackingStatus == "Pending")</span>
+                    </div>
+                    <div class="filter-pill" data-filter="WaitingForReview">
+                        <i class="bi bi-hourglass-split"></i> รอตรวจสอบ
+                        <span class="filter-count">@Model.Count(x => x.TrackingStatus == "WaitingForReview")</span>
+                    </div>
+                    <div class="filter-pill" data-filter="Preparing">
+                        <i class="bi bi-box-seam"></i> เตรียมจัดส่ง
+                        <span class="filter-count">@Model.Count(x => new[] { "Paid", "Preparing", "Processing" }.Contains(x.TrackingStatus))</span>
+                    </div>
+                    <div class="filter-pill" data-filter="Shipped">
+                        <i class="bi bi-truck"></i> กำลังจัดส่ง
+                        <span class="filter-count">@Model.Count(x => x.TrackingStatus == "Shipped" || x.TrackingStatus == "กำลังจัดส่งสินค้า")</span>
+                    </div>
+                    <div class="filter-pill" data-filter="Completed">
+                        <i class="bi bi-check-circle"></i> สำเร็จแล้ว
+                        <span class="filter-count">@Model.Count(x => x.TrackingStatus == "Completed")</span>
+                    </div>
+                    <div class="filter-pill" data-filter="Cancelled">
+                        <i class="bi bi-x-circle"></i> ยกเลิกแล้ว
+                        <span class="filter-count">@Model.Count(x => x.TrackingStatus == "Cancelled")</span>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var order in Model)
+                {
+                    <div class="order-card mb-4 order-item" data-status="@order.TrackingStatus">
+                        <div class="order-header d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                            <div>
+                                <h5 class="mb-1 fw-bold">ORDER #@order.OrderId</h5>
+                                <small class="text-light opacity-75">
+                                    สั่งเมื่อ: @(order.OrderDatetime?.ToString("dd MMM yyyy, HH:mm") ?? "-")
+                                </small>
+                            </div>
+                            <div class="mt-2 mt-md-0">
+                                <span class="status-badge">
+                                    @if (order.TrackingStatus == "Completed") { <text><i class="bi bi-check-circle"></i> รับสินค้าเรียบร้อย</text> }
+                                    else if (order.TrackingStatus == "กำลังจัดส่งสินค้า" || order.TrackingStatus == "Shipped") { <text><i class="bi bi-truck"></i> กำลังจัดส่ง</text> }
+                                    else if (order.TrackingStatus == "WaitingForReview") { <text><i class="bi bi-hourglass-split"></i> รอตรวจสอบยอดเงิน</text> }
+                                    else if (order.TrackingStatus == "Paid" || order.TrackingStatus == "Processing" || order.TrackingStatus == "Preparing") { <text><i class="bi bi-box-seam"></i> กำลังเตรียมจัดส่ง</text> }
+                                    else if (order.TrackingStatus == "WaitingForPayment" || order.TrackingStatus == "Pending") { <text><i class="bi bi-wallet2"></i> รอชำระเงิน</text> }
+                                    else if (order.TrackingStatus == "Cancelled") { <text><i class="bi bi-x-circle"></i> ยกเลิกแล้ว</text> }
+                                    else { @order.TrackingStatus }
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <div class="border-bottom pb-3 mb-3">
+                                <h6 class="text-muted small mb-3">รายการสินค้า:</h6>
+                                @if (order.OrderItems != null && order.OrderItems.Any())
+                                {
+                                    foreach (var item in order.OrderItems)
+                                    {
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="@(string.IsNullOrEmpty(item.Product?.ImageUrl) ? "https://via.placeholder.com/65x65.png?text=OTOP" : item.Product.ImageUrl)" class="product-img me-3">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0 fw-bold">@(item.Product?.ProductName ?? "สินค้าไม่ทราบชื่อ")</h6>
+                                                <small class="text-muted">ราคา: ฿@item.UnitPrice.ToString("N2")</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-light text-dark border px-2 py-1 mb-1">x @item.Quantity</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end">
+                                <a asp-controller="Home" asp-action="OrderDetail" asp-route-orderId="@order.OrderId" class="text-muted text-decoration-none small">
+                                    <i class="bi bi-receipt"></i> ดูรายละเอียดคำสั่งซื้อแบบเต็ม
+                                </a>
+                                <div class="text-md-end">
+                                    <p class="text-muted mb-1 small">ยอดรวมสุทธิ</p>
+                                    <h3 class="fw-bold text-success mb-3">฿@((order.NetAmount ?? 0).ToString("N2"))</h3>
+                                    
+                                    @if (order.TrackingStatus == "Shipped" || order.TrackingStatus == "กำลังจัดส่งสินค้า")
+                                    {
+                                        <form id="form-receive-@order.OrderId" asp-controller="Home" asp-action="ConfirmReceiveOrder" method="post">
+                                            <input type="hidden" name="orderId" value="@order.OrderId" />
+                                            <button type="button" class="btn btn-otop shadow-sm" onclick="confirmReceiveOrder(@order.OrderId)">
+                                                <i class="bi bi-box-seam-fill me-1"></i> ฉันได้รับสินค้าแล้ว
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (order.TrackingStatus == "Completed")
+                                    {
+                                        @if (order.ProductReviews != null && order.ProductReviews.Any())
+                                        {
+                                            <button class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" disabled>(รีวิวเรียบร้อย)</button>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Home" asp-action="ProductReview" asp-route-orderId="@order.OrderId" class="btn btn-outline-warning rounded-pill px-4 shadow-sm fw-bold">
+                                                <i class="bi bi-star-fill me-1"></i> ให้คะแนน / รีวิว
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+                <div id="no-order-msg" class="text-center py-5 text-muted bg-white rounded-3 shadow-sm border" style="display:none; border-radius: 12px;">
+                    <i class="bi bi-search" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">ไม่พบรายการสั่งซื้อในสถานะนี้</h5>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted bg-white rounded-3 shadow-sm border" style="border-radius: 12px;">
+                    <i class="bi bi-box-seam" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">ยังไม่มีประวัติการสั่งซื้อ</h4>
+                    <a asp-controller="Home" asp-action="Product" class="btn btn-success mt-3 rounded-pill px-4">ไปช้อปปิ้งกันเลย</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('.filter-pill').on('click', function () {
+                $('.filter-pill').removeClass('active');
+                $(this).addClass('active');
+
+                var filter = $(this).attr('data-filter');
+                var visibleCount = 0;
+
+                $('.order-item').each(function () {
+                    var status = $(this).attr('data-status');
+                    var isMatch = false;
+
+                    if (filter === 'all') isMatch = true;
+                    else if (filter === 'Pending') isMatch = (status === 'WaitingForPayment' || status === 'Pending');
+                    else if (filter === 'WaitingForReview') isMatch = (status === 'WaitingForReview');
+                    else if (filter === 'Preparing') isMatch = (status === 'Paid' || status === 'Preparing' || status === 'Processing');
+                    else if (filter === 'Shipped') isMatch = (status === 'Shipped' || status === 'กำลังจัดส่งสินค้า');
+                    else if (filter === 'Completed') isMatch = (status === 'Completed');
+                    else if (filter === 'Cancelled') isMatch = (status === 'Cancelled');
+
+                    if (isMatch) {
+                        $(this).fadeIn(300);
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (visibleCount === 0) $('#no-order-msg').fadeIn();
+                else $('#no-order-msg').hide();
+            });
+
+            // แจ้งเตือนรีวิวสำเร็จ
+            var message = `@Html.Raw(TempData["ReviewSuccess"])`;
+            if (message && message.trim() !== '') {
+                Swal.fire({
+                    title: 'สำเร็จ!',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonColor: '#244634',
+                    confirmButtonText: 'ตกลง'
+                });
+            }
+        });
+
+        function confirmReceiveOrder(orderId) {
+            Swal.fire({
+                title: 'ยืนยันการรับสินค้า?',
+                text: "คุณตรวจสอบและได้รับสินค้าเรียบร้อยแล้วใช่หรือไม่?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#244634',
+                confirmButtonText: 'ใช่, ฉันได้รับแล้ว',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-receive-' + orderId).submit();
+                }
+            });
+        }
+    </script>
+}

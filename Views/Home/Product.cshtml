@@ -1,3 +1,4 @@
+@model IEnumerable<WebApplication1.Models.Db.Product>
 @{
     Layout = "_Aomsin";
     ViewData["Title"] = "หน้าแรก";
@@ -12,7 +13,8 @@
             <div class="d-flex flex-column flex-md-row justify-content-md-end gap-3">
                 <div class="input-group" style="max-width: 300px;">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="ค้นหาสินค้า...">
+                    <input type="text" id="searchInput" class="form-control border-start-0 ps-0"
+                           placeholder="ค้นหาสินค้า...">
                 </div>
                 <select id="sortFilter" class="form-select w-auto text-secondary fw-medium shadow-sm">
                     <option value="latest">สินค้าล่าสุด</option>
@@ -22,105 +24,103 @@
             </div>
         </div>
     </div>
+    <style>
+            /* ซ่อนลูกศรขึ้น-ลงใน Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
 
-    <div class="row g-4" id="productGrid">
+            /* ซ่อนลูกศรขึ้น-ลงใน Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+    </style>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 mb-4 product-item" data-id="@item.ProductId" data-name="@item.ProductName"
+                 data-price="@item.ProductPrice">
+                <div class="card h-100 shadow-sm border-0">
+            
+                    <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@item.ProductId">
+                        <img src="@item.ImageUrl" class="card-img-top p-3" alt="@item.ProductName"
+                             style="height: 200px; object-fit: contain;" onerror="this.src='/images/no-image.png'" />
+                    </a>
         
-        <div class="col-md-3 col-sm-6 product-item" data-id="1" data-price="490" data-name="กระเป๋าสาน">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
-                <img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?w=400&h=300&fit=crop" class="card-img-top" alt="กระเป๋าสาน" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">กระเป๋าสาน</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿490</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
+                    <div class="card-body text-center d-flex flex-column">
+                
+                        <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@item.ProductId"
+                               class="text-decoration-none text-dark mb-1">
+                            <h6 class="card-title fw-bold mb-0">@item.ProductName</h6>
+                        </a>
+
+                        <div class="mb-2">
+                            @if (item.ReviewCount > 0)
+                            {
+                                <div class="text-warning" style="font-size: 0.85rem;">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Round(item.RatingScore ?? 0))
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star"></i>
+                                        }
+                                    }
+                                    <span class="text-muted ms-1" style="font-size: 0.75rem;">(@item.ReviewCount)</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-star"></i> ยังไม่มีรีวิว
+                                </div>
+                            }
+                        </div>
+                        <h5 class="text-success fw-bold mt-auto">฿@item.ProductPrice</h5>
+            
+                        <form asp-controller="Home" asp-action="AddToCart" method="post" class="mt-auto">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+    
+                            @if (item.StockQuantity > 0)
+                            {
+                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                    <div class="input-group input-group-sm"
+                                         style="width: 110px; border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden;">
+                                        <button class="btn btn-link text-dark text-decoration-none border-0 py-0" type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+                                        <input type="number" name="quantity" value="1" min="1"
+                                               class="form-control border-0 text-center bg-white fw-bold p-0"
+                                               style="box-shadow: none; font-size: 0.9rem;" />
+                                        <button class="btn btn-link text-dark text-decoration-none border-0 py-0" type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-outline-success rounded-pill px-4 btn-sm w-100">
+                                    <i class="bi bi-cart"></i> หยิบใส่ตะกร้า
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm w-100 mt-5" disabled>
+                                    สินค้าหมด
+                                </button>
+                            }
+                        </form>
+
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="2" data-price="390" data-name="ตะกร้าสาน">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
-                <img src="https://images.unsplash.com/photo-1585644833215-288295b92ee9?w=400&h=300&fit=crop" class="card-img-top" alt="ตะกร้าสาน" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">ตะกร้าสาน</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿390</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="3" data-price="290" data-name="รองเท้าสาน">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-success position-absolute top-0 start-0 m-2 z-1">งานสาน</span>
-                <img src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?w=400&h=300&fit=crop" class="card-img-top" alt="รองเท้าสาน" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">รองเท้าสาน</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿290</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="4" data-price="650" data-name="ผ้าถุงทอมือ">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
-                <img src="https://images.unsplash.com/photo-1620783770629-122b7f187703?w=400&h=300&fit=crop" class="card-img-top" alt="ผ้าถุงทอมือ" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">ผ้าถุงทอมือ</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿650</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="5" data-price="350" data-name="เสื้อผ้าทอมือ">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
-                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=300&fit=crop" class="card-img-top" alt="เสื้อผ้าทอมือ" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">เสื้อผ้าทอมือ</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿350</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="6" data-price="350" data-name="กางเกงผ้าทอมือ">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1">ผ้าทอมือ</span>
-                <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop" class="card-img-top" alt="กางเกงผ้าทอมือ" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">กางเกงผ้าทอมือ</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿350</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="7" data-price="190" data-name="สร้อยข้อมือ">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 z-1">ของที่ระลึก</span>
-                <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=300&fit=crop" class="card-img-top" alt="สร้อยข้อมือ" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">สร้อยข้อมือ</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿190</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-6 product-item" data-id="8" data-price="299" data-name="ตุ๊กตา Re-cycle">
-            <div class="card h-100 border-0 shadow-sm card-product position-relative overflow-hidden">
-                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 z-1">ของที่ระลึก</span>
-                <img src="https://images.unsplash.com/photo-1558066557-0b19672bbce2?w=400&h=300&fit=crop" class="card-img-top" alt="ตุ๊กตา Re-cycle" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6 text-dark">ตุ๊กตา Re-cycle</h5>
-                    <p class="text-success fw-bold fs-5 mb-3">฿299</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-
+        }
     </div>
 </div>
 
@@ -130,10 +130,11 @@
             const searchInput = document.getElementById('searchInput');
             const sortFilter = document.getElementById('sortFilter');
             const productGrid = document.getElementById('productGrid');
-            // แปลง NodeList ของสินค้าให้เป็น Array เพื่อให้ง่ายต่อการเรียง
             let products = Array.from(document.querySelectorAll('.product-item'));
 
-            // ระบบค้นหา (Search)
+            // ------------------------------------
+            // 1. ระบบค้นหา (Search) ของเดิม
+            // ------------------------------------
             searchInput.addEventListener('input', function (e) {
                 const keyword = e.target.value.toLowerCase();
                 products.forEach(product => {
@@ -146,7 +147,9 @@
                 });
             });
 
-            // ระบบเรียงลำดับ (Filter / Sort)
+            // ------------------------------------
+            // 2. ระบบเรียงลำดับ (Filter / Sort) ของเดิม
+            // ------------------------------------
             sortFilter.addEventListener('change', function (e) {
                 const sortType = e.target.value;
 
@@ -157,11 +160,11 @@
                     const idB = parseInt(b.getAttribute('data-id'));
 
                     if (sortType === 'price-asc') {
-                        return priceA - priceB; // ราคา ต่ำไปสูง
+                        return priceA - priceB;
                     } else if (sortType === 'price-desc') {
-                        return priceB - priceA; // ราคา สูงไปต่ำ
+                        return priceB - priceA;
                     } else {
-                        return idB - idA; //
+                        return idB - idA;
                     }
                 });
 
@@ -170,6 +173,8 @@
             });
             
             sortFilter.dispatchEvent(new Event('change'));
+
+            
         });
     </script>
 }
