@@ -1,0 +1,149 @@
+@model WebApplication1.Models.Db.Product
+@using WebApplication1.Models.Db
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "รายละเอียดสินค้า - " + Model.ProductName;
+
+    var reviews = ViewBag.Reviews as List<ProductReview> ?? new List<ProductReview>();
+}
+
+<style>
+    /* 1. ซ่อนลูกศรขึ้น-ลงของระบบ (Spin Buttons) */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* 2. ปรับแต่ง Input Group ให้ดูเนียน */
+    .qty-container {
+        width: 130px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .qty-input {
+        border: none !important;
+        font-weight: bold;
+        box-shadow: none !important;
+    }
+
+    .btn-qty {
+        background: #f8f9fa !important;
+        color: #333 !important;
+        border: none !important;
+        width: 35px;
+    }
+
+    .btn-qty:hover {
+        background: #e9ecef !important;
+    }
+</style>
+
+<div class="container mt-5">
+    
+    <div class="row">
+        <div class="col-md-5">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.ProductName" />
+        </div>
+
+        <div class="col-md-7">
+            <h2>@Model.ProductName</h2>
+            
+            <h3 class="text-success fw-bold mt-3">฿@Model.ProductPrice</h3>
+
+            <div class="alert alert-warning mt-3" role="alert">
+                🔥 <strong>โปรโมชั่นพิเศษ!</strong> ซื้อครบ 1000 บาทขึ้นไป รับสิทธิ์จัดส่งฟรีทั่วประเทศ
+            </div>
+
+            <div class="mt-4">
+                <h5>รายละเอียดสินค้า</h5>
+                <p class="text-muted">
+                    สินค้านี้เป็นผลิตภัณฑ์ OTOP คุณภาพสูงจากชุมชนท้องถิ่น ผลิตด้วยความประณีตและใส่ใจในทุกขั้นตอน
+                    เหมาะสำหรับนำไปใช้งานหรือเป็นของฝากที่ทรงคุณค่า สนับสนุนรายได้สู่ชุมชนโดยตรง
+                </p>
+            </div>
+
+            <form asp-controller="Home" asp-action="AddToCart" method="post"
+                  class="mt-4 d-flex align-items-center gap-3">
+                <input type="hidden" name="productId" value="@Model.ProductId" />
+    
+                @if (Model.StockQuantity > 0)
+                {
+                    <div class="d-flex align-items-center">
+                        <label class="me-2 fw-bold mb-0">จำนวน:</label>
+            
+                        <div class="input-group qty-container">
+                            <button class="btn btn-qty" type="button"
+                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                
+                            <input type="number" name="quantity" value="1" min="1" max="@Model.StockQuantity"
+                                   class="form-control text-center qty-input p-0" />
+                
+                            <button class="btn btn-qty" type="button"
+                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+        
+                    <button type="submit" class="btn btn-success btn-lg px-4 rounded-3 fw-bold">
+                        <i class="bi bi-cart-plus-fill me-1"></i> หยิบใส่ตะกร้า
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary btn-lg px-4 rounded-3 fw-bold" disabled>
+                        สินค้าหมด
+                    </button>
+                }
+            </form>
+
+            <hr class="mt-5" />
+
+            <div class="product-reviews-section">
+                <h3>รีวิวจากลูกค้า (@Model.ReviewCount รีวิว)</h3>
+    
+                @if (reviews.Any())
+                {
+                    foreach (var review in reviews)
+                    {
+                        <div class="review-card" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                            <p class="mb-1"><strong>@review.ReviewerName</strong>
+                                <span style="color: gold; margin-left: 10px;">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.StarScore)
+                                        {
+                                            <span>★</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color: lightgray;">★</span>
+                                        }
+                                    }
+                                </span>
+                            </p>
+                            <p class="mb-1">@review.Comment</p>
+                            <small class="text-muted">รีวิวเมื่อ: @review.ReviewDate.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-light mt-3" role="alert">
+                        ยังไม่มีรีวิวสำหรับสินค้านี้
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+@model WebApplication1.Models.Db.Order
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "ให้คะแนนสินค้า";
+}
+
+<style>
+    body { background-color: #fbfaf6; }
+    .review-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border: 1px solid #eee;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .product-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+    .btn-submit {
+        background-color: #244634;
+        color: white;
+        border-radius: 50px;
+        padding: 10px 30px;
+    }
+    .btn-submit:hover { background-color: #1a3325; color: white; }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-dark mb-0">
+                    <i class="bi bi-star-fill text-warning me-2"></i>ให้คะแนนสินค้า
+                </h3>
+                <span class="badge bg-secondary">Order #@Model.OrderId</span>
+            </div>
+
+            @if (Model.OrderItems != null)
+            {
+                foreach (var item in Model.OrderItems)
+                {
+                    // 1. ดึงข้อมูลรีวิวของชิ้นนี้ออกมาดู
+                    var reviewObj = Model.ProductReviews != null ? Model.ProductReviews.FirstOrDefault(r => r.ProductId == item.ProductId) : null;
+                    bool isReviewed = reviewObj != null;
+
+                    <div class="review-card">
+                        <div class="d-flex align-items-center mb-3 border-bottom pb-3">
+                            @if (item.Product != null && !string.IsNullOrEmpty(item.Product.ImageUrl))
+                            {
+                                <img src="@item.Product.ImageUrl" class="product-img me-3" alt="">
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/80?text=No+Image" class="product-img me-3" alt="">
+                            }
+                            <div>
+                                <h5 class="fw-bold mb-1">@(item.Product?.ProductName ?? "สินค้าไม่ทราบชื่อ")</h5>
+                                <p class="text-muted small mb-0">จำนวน: @item.Quantity ชิ้น</p>
+                            </div>
+                        </div>
+
+                        @if (!isReviewed)
+                        {
+                            <form asp-controller="Home" asp-action="AddReview" method="post">
+                                <input type="hidden" name="productId" value="@item.ProductId" />    
+                                <input type="hidden" name="orderId" value="@Model.OrderId" /> 
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">ให้คะแนนสินค้านี้</label>
+                                    <select name="starScore" class="form-select" style="max-width: 200px;">
+                                        <option value="5" selected>★★★★★ (5 ดาว - ดีเยี่ยม)</option>
+                                        <option value="4">★★★★ (4 ดาว - ดี)</option>
+                                        <option value="3">★★★ (3 ดาว - ปานกลาง)</option>
+                                        <option value="2">★★ (2 ดาว - พอใช้)</option>
+                                        <option value="1">★ (1 ดาว - ต้องปรับปรุง)</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">ความประทับใจของคุณ</label>
+                                    <textarea name="comment" class="form-control" rows="3" placeholder="แชร์ความรู้สึกของคุณเกี่ยวกับสินค้านี้..."></textarea>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-3">
+                                    <button type="submit" class="btn btn-dark">
+                                        <i class="bi bi-send"></i> ส่งรีวิวชิ้นนี้
+                                    </button>
+                                    <button type="submit" formaction="/Home/SkipReview" class="btn btn-outline-secondary">
+                                        ไม่ต้องการรีวิว
+                                    </button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success mb-0 d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                                <div>
+                                    @if (reviewObj.Comment == "ไม่ได้ระบุความคิดเห็น")
+                                    {
+                                        <h6 class="mb-0 fw-bold text-secondary">ไม่ต้องการแสดงความคิดเห็น</h6>
+                                        <small class="text-muted">ข้ามการรีวิวสินค้าชิ้นนี้เรียบร้อยแล้ว</small>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="mb-0 fw-bold">รีวิวสินค้าชิ้นนี้เรียบร้อยแล้ว</h6>
+                                        <small class="text-muted">ขอบคุณที่ร่วมเป็นส่วนหนึ่งในการพัฒนาสินค้าของเราครับ/ค่ะ</small>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            
+            <div class="text-center mt-4">
+                <a asp-controller="Home" asp-action="OrderHistory" class="text-muted text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> กลับไปหน้าประวัติการสั่งซื้อ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

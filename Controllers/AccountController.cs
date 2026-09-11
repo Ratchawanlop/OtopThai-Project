@@ -15,54 +15,39 @@ public class AccountController : Controller
         _db = db;
     }
 
-    public IActionResult Test1()
-    {
-        return View();
-    }
-
-    public IActionResult Test2()
-    {
-        return View();
-    }
-
-    public IActionResult Lab4()
-    {
-        return View();
-    }
-
-    public IActionResult Lab5()
-    {
-        return View();
-    }
 
     public IActionResult Login()
     {
+        GetCartCount();
         return View();
     }
-
     [HttpPost]
     public IActionResult Login(LoginViewModel data)
     {
+        GetCartCount();
         var user = (from u in _db.Users
                     where u.PhoneNumber == data.Phone_number && u.PasswordHash == data.Password
                     select u).FirstOrDefault();
 
         if (user != null)
-        {
-            HttpContext.Session.SetString("Username", user.Username);
-            HttpContext.Session.SetInt32("RoleId", user.RoleId);
+    {
+        HttpContext.Session.SetInt32("UserId", user.UserId);
+        
+        HttpContext.Session.SetString("Username", user.Username ?? "ผู้ใช้งาน"); 
+        
+        HttpContext.Session.SetInt32("RoleId", user.RoleId);
+        HttpContext.Session.SetString("Email", user.Email ?? "ไม่มีอีเมล");
 
-            TempData["Success"] = "เข้าสู่ระบบสำเร็จ!";
-            return RedirectToAction("Homepage", "Home");
-        }
+        TempData["Success"] = "ยินดีต้อนรับคุณ " + (user.Username ?? "ผู้ใช้งาน") + " เข้าสู่ระบบ";
+        return RedirectToAction("Homepage", "Home");
+    }
         else
         {
-            TempData["Error"] = "เบอร์โทรศัพท์หรือรหัสผ่านไม่ถูกต้อง";
+            ViewBag.Error = "เบอร์โทรศัพท์หรือรหัสผ่านไม่ถูกต้อง";
             return View();
         }
     }
 
-    // สร้างฟังก์ชัน Logout เพิ่มเข้ามา
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
@@ -71,12 +56,20 @@ public class AccountController : Controller
 
     public IActionResult Register()
     {
+        GetCartCount();
         return View();
     }
-
     [HttpPost]
     public IActionResult Register(RegisterViewModel data)
     {
+        var existingUser = _db.Users.FirstOrDefault(u => u.PhoneNumber == data.Phone_number);
+
+        if (existingUser != null)
+        {
+            TempData["Error"] = "เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว กรุณาใช้เบอร์อื่น";
+            return View(data);
+        }
+
         var u = new User();
         u.UserId = data.UserId;
         u.RoleId = data.RoleId;
@@ -86,9 +79,12 @@ public class AccountController : Controller
         u.Username = data.Username;
         u.AddressMain = data.AddressMain;
         u.CreateAt = DateTime.Now;
+
         _db.Users.Add(u);
         _db.SaveChanges();
-        return RedirectToAction("Userlist", "Account");
+
+        TempData["Success"] = "สมัครสมาชิกเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ";
+        return RedirectToAction("Login", "Account");
     }
 
     public IActionResult Userlist()
@@ -100,6 +96,42 @@ public class AccountController : Controller
     public IActionResult AddUser()
     {
         return View();
+    }
+    [HttpPost]
+    public IActionResult AddUser(RegisterViewModel data)
+    {
+        var isDuplicate = _db.Users.Any(u => u.PhoneNumber == data.Phone_number);
+
+        if (isDuplicate)
+        {
+            TempData["Error"] = "เบอร์โทรศัพท์นี้มีในระบบแล้ว ไม่สามารถเพิ่มซ้ำได้";
+            return View(data);
+        }
+
+        try
+        {
+            var u = new User
+            {
+                Username = data.Username,
+                PhoneNumber = data.Phone_number,
+                PasswordHash = data.Password_hash,
+                Email = data.Email,
+                AddressMain = data.AddressMain,
+                RoleId = data.RoleId,
+                CreateAt = DateTime.Now
+            };
+
+            _db.Users.Add(u);
+            _db.SaveChanges();
+
+            TempData["Success"] = "เพิ่มผู้ใช้งาน " + data.Username + " สำเร็จ";
+            return RedirectToAction("UserList");
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "เกิดข้อผิดพลาด: " + ex.Message;
+            return View(data);
+        }
     }
 
     public IActionResult EditUser(int id)
@@ -136,18 +168,22 @@ public class AccountController : Controller
         var user = (from u in _db.Users where u.UserId == data.UserId select u).FirstOrDefault();
 
         if (user != null)
+    {
+        user.Username = data.Username;
+        user.PhoneNumber = data.PhoneNumber;
+        user.Email = data.Email;
+        user.AddressMain = data.AddressMain;
+        user.RoleId = data.RoleId;
+
+        // ถ้า data.PasswordHash ไม่ใช่ค่าว่าง (คือแอดมินพิมพ์รหัสใหม่) ค่อยเอาไปเซฟทับ
+        if (!string.IsNullOrEmpty(data.PasswordHash))
         {
-            user.Username = data.Username;
-            user.PhoneNumber = data.PhoneNumber;
             user.PasswordHash = data.PasswordHash;
-            user.Email = data.Email;
-            user.AddressMain = data.AddressMain;
-            user.RoleId = data.RoleId;
-
-
-            _db.Update(user);
-            _db.SaveChanges();
         }
+
+        _db.Update(user); 
+        _db.SaveChanges();
+    }
 
         return RedirectToAction("UserList", "Account");
     }
@@ -158,6 +194,22 @@ public class AccountController : Controller
         _db.Users.Remove(user);
         _db.SaveChanges();
         return RedirectToAction("UserList", "Account");
+    }
+
+    private void GetCartCount()
+    {
+        var userId = HttpContext.Session.GetInt32("UserId");
+        int cartCount = 0;
+
+        if (userId != null)
+        {
+            var order = _db.Orders.OrderByDescending(o => o.OrderId).FirstOrDefault(o => o.UserId == userId && o.TrackingStatus == "Pending");
+            if (order != null)
+            {
+                cartCount = _db.OrderItems.Where(i => i.OrderId == order.OrderId).Sum(i => i.Quantity);
+            }
+        }
+        ViewBag.CartCount = cartCount;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

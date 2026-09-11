@@ -1,5 +1,6 @@
+@model WebApplication1.Models.Db.Order
 @{
-    Layout = "_Aomsin.cshtml";
+    Layout = "_Aomsin";
     ViewData["Title"] = "ตะกร้าสินค้า";
 }
 
@@ -21,119 +22,232 @@
                                     <th>จัดการ</th>
                                 </tr>
                             </thead>
-                            <tbody id="cartTableBody">
+                            <tbody>
+                                @if (Model == null || Model.OrderItems == null || !Model.OrderItems.Any())
+                                {
+                                    <tr>
+                                        <td colspan="5" class="py-5 text-muted text-center">ยังไม่มีสินค้าในตะกร้าของคุณ
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model.OrderItems)
+                                    {
+                                        var itemTotal = item.UnitPrice * item.Quantity;
+                                        <tr>
+                                            <td class="text-start ps-4 fw-medium">@(item.Product != null ?
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        item.Product.ProductName : "ไม่ทราบชื่อสินค้า")</td>
+                                                <td>฿@item.UnitPrice.ToString("N2")</td>
+        
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="qty-wrapper shadow-sm">
+                                                            <button class="qty-btn" type="button"
+                                                                    onclick="changeQty('@item.ProductId', '@(item.Product?.ProductName)', -1)">
+                                                                <i class="bi bi-dash-lg"></i>
+                                                            </button>
+            
+                                                            <form id="qty-form-@item.ProductId" asp-action="UpdateCartQuantity"
+                                                                  asp-controller="Home" method="post" class="m-0 flex-grow-1">
+                                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                                <input type="number" name="quantity" id="input-@item.ProductId"
+                                                                       class="qty-input-box" value="@item.Quantity" min="0"
+                                                                       onchange="this.form.submit()" />
+                                                            </form>
+            
+                                                            <button class="qty-btn" type="button"
+                                                                    onclick="changeQty('@item.ProductId', '@(item.Product?.ProductName)', 1)">
+                                                                <i class="bi bi-plus-lg"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-success fw-bold">฿@itemTotal.ToString("N2")</td>
+
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                            onclick="confirmDelete('@item.ProductId', '@(item.Product?.ProductName)')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+    
+                                                    <form id="delete-form-@item.ProductId" asp-action="RemoveFromCart"
+                                                          asp-controller="Home" method="post" style="display:none;">
+                                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
                                 </tbody>
-                        </table>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">สรุปยอดคำสั่งซื้อ</h5>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>ยอดรวมสินค้า:</span>
-                        <span id="subtotalPrice">฿0.00</span>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">สรุปยอดคำสั่งซื้อ</h5>
+            
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>ยอดรวมสินค้า :</span>
+                            <span>฿@(Model != null ? (Model.Subtotal ?? 0).ToString("N2") : "0.00")</span>
+                        </div>
+            
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-success">
+                                ส่วนลด
+                                @* เพิ่มตรงนี้เข้าไปครับ *@
+                                @if (!string.IsNullOrEmpty(ViewBag.PromotionName as string))
+                                {
+                                    <small class="text-muted ms-1" style="font-size: 0.85em;">
+                                        (@ViewBag.PromotionName)
+                                    </small>
+                                }
+                                :
+                            </span>
+                            <span class="text-success">-฿@(Model != null ? (Model.DiscountAmount ?? 0).ToString("N2") : "0.00")</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>ค่าจัดส่ง :</span>
+                            @if (Model != null && (Model.ShippingCost ?? 0) == 0)
+                            {
+                                <span class="text-success fw-bold">ฟรี</span>
+                            }
+                            else
+                            {
+                                <span>฿@(Model != null ? (Model.ShippingCost ?? 0).ToString("N2") : "0.00")</span>
+                            }
+                        </div>
+                        <hr>
+            
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold fs-5">ยอดที่ต้องชำระ:</span>
+                            <span>฿@(Model != null ? (Model.NetAmount ?? 0).ToString("N2") : "0.00")</span>
+                        </div>
+        
+                        @if (Model != null && Model.OrderItems.Count > 0)
+                        {
+                            <a asp-action="Checkout" asp-controller="Home"
+                               class="btn btn-success w-100">ยืนยันและไปหน้าชำระเงิน</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary w-100" disabled>ไม่มีสินค้าให้ชำระเงิน</button>
+                        }
                     </div>
-                    <div class="d-flex justify-content-between mb-3 text-success">
-                        <span>ส่วนลด (ถ้ามี):</span>
-                        <span id="discountPrice">-฿0.00</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="fw-bold fs-5">ยอดที่ต้องชำระ:</span>
-                        <span class="fw-bold fs-5 text-danger" id="totalPrice">฿0.00</span>
-                    </div>
-                    
-                    <a asp-controller="Home" asp-action="Payment" class="btn btn-success w-100 rounded-pill py-2 fw-bold fs-5">
-                        ยืนยันและไปหน้าชำระเงิน
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+<style>
+    /* ซ่อนลูกศรเพิ่ม/ลดของตัวเลข */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* จัดแต่ง Container ของจำนวนสินค้า */
+    .qty-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        width: 130px;
+        /* กำหนดความกว้างตายตัว */
+        height: 38px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .qty-btn {
+        width: 35px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border: none;
+        transition: 0.2s;
+    }
+
+    .qty-btn:hover {
+        background: #e9ecef;
+    }
+
+    .qty-input-box {
+        flex: 1;
+        border: none !important;
+        text-align: center;
+        font-weight: bold;
+        outline: none;
+        width: 45px;
+    }
+</style>
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const cartTableBody = document.getElementById('cartTableBody');
-            let cart = JSON.parse(localStorage.getItem('otop_cart')) || [];
-
-            function renderCart() {
-                cartTableBody.innerHTML = '';
-                let subtotal = 0;
-
-                if (cart.length === 0) {
-                    cartTableBody.innerHTML = '<tr><td colspan="5" class="py-5 text-muted">ยังไม่มีสินค้าในตะกร้าของคุณ</td></tr>';
-                    document.getElementById('subtotalPrice').innerText = '฿0.00';
-                    document.getElementById('totalPrice').innerText = '฿0.00';
-                    updateBadge(0);
-                    return;
+        function confirmDelete(productId, productName) {
+            Swal.fire({
+                title: 'ยืนยันการลบสินค้า',
+                text: `คุณต้องการลบ "${productName}" ออกจากตะกร้าใช่หรือไม่?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',     // สีแดงสำหรับยืนยัน
+                cancelButtonColor: '#6c757d',   // สีเทาสำหรับยกเลิก
+                confirmButtonText: 'ใช่, ลบเลย',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,           // เอาปุ่มยืนยันไว้ขวาเหมือนมาตรฐานแอปทั่วไป
+                borderRadius: '15px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${productId}`).submit();
                 }
+            })
+        }
 
-                cart.forEach((item, index) => {
-                    let itemTotal = item.price * item.quantity;
-                    subtotal += itemTotal;
+        function changeQty(productId, productName, delta) {
+            const input = document.getElementById(`input-${productId}`);
+            const currentVal = parseInt(input.value);
+            const newVal = currentVal + delta;
 
-                    cartTableBody.innerHTML += `
-                        <tr>
-                            <td class="text-start ps-4 fw-medium">${item.name}</td>
-                            <td>฿${item.price}</td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm text-center mx-auto qty-input" 
-                                       style="width: 70px;" value="${item.quantity}" min="1" data-index="${index}">
-                            </td>
-                            <td class="text-success fw-bold">฿${itemTotal}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger btn-remove" data-index="${index}">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                document.getElementById('subtotalPrice').innerText = '฿' + subtotal.toFixed(2);
-                document.getElementById('totalPrice').innerText = '฿' + subtotal.toFixed(2);
-                
-                let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                updateBadge(totalItems);
+            if (newVal < 1) {
+                // ถ้าลดลงจนเหลือ 0 หรือน้อยกว่า ให้เรียกฟังก์ชันลบที่สวยงาม
+                confirmDeleteInCart(productId, productName);
+            } else {
+                // ถ้าค่ามากกว่า 0 ให้ปรับตัวเลขแล้วส่งฟอร์ม Update ทันที
+                input.value = newVal;
+                document.getElementById(`qty-form-${productId}`).submit();
             }
+        }
 
-            function updateBadge(total) {
-                const cartBadge = document.getElementById('cartBadge');
-                if(cartBadge) {
-                    cartBadge.innerText = total;
-                    cartBadge.style.display = total > 0 ? 'inline-block' : 'none'; 
-                }
-            }
-
-            cartTableBody.addEventListener('change', function(e) {
-                if(e.target.classList.contains('qty-input')) {
-                    const index = e.target.getAttribute('data-index');
-                    const newQty = parseInt(e.target.value);
-                    if(newQty > 0) {
-                        cart[index].quantity = newQty;
-                        localStorage.setItem('otop_cart', JSON.stringify(cart));
-                        renderCart();
-                    }
+        function confirmDeleteInCart(productId, productName) {
+            Swal.fire({
+                title: 'ต้องการลบสินค้า?',
+                text: `คุณต้องการลบ "${productName}" ออกจากตะกร้าใช่หรือไม่?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'ใช่, ลบเลย',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${productId}`).submit();
                 }
             });
-
-            cartTableBody.addEventListener('click', function(e) {
-                const btn = e.target.closest('.btn-remove');
-                if(btn) {
-                    const index = btn.getAttribute('data-index');
-                    cart.splice(index, 1); 
-                    localStorage.setItem('otop_cart', JSON.stringify(cart));
-                    renderCart();
-                }
-            });
-
-            renderCart();
-        });
+        }
     </script>
 }

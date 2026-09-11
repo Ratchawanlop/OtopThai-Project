@@ -1,0 +1,50 @@
+@model IEnumerable<WebApplication1.Models.Db.Promotion>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "จัดการโปรโมชั่น";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0 fw-bold text-dark"><i class="bi bi-megaphone text-success me-2"></i>จัดการโปรโมชั่น</h2>
+        <a asp-action="CreatePromotion" class="btn btn-success rounded-pill px-4 shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> เพิ่มโปรโมชั่น
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ชื่อโปรโมชั่น</th>
+                            <th>ประเภท</th>
+                            <th>ส่วนลด</th>
+                            <th>วันหมดอายุ</th>
+                            <th class="text-center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@item.PromotionName</td>
+                                <td><span class="badge bg-info text-dark">@item.PromotionType</span></td>
+                                <td class="text-danger fw-bold">@item.DiscountValue</td>
+                                <td>@item.EndDate?.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    <a asp-action="DeletePromotion" asp-route-id="@item.PromotionId" 
+                                       class="btn btn-sm btn-outline-danger rounded-pill" 
+                                       onclick="return confirm('ยืนยันการลบโปรโมชั่นนี้?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

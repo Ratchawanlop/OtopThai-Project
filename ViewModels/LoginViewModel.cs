@@ -4,12 +4,8 @@ namespace WebApplication1.ViewModels;
 
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "กรุณากรอกเบอร์โทรศัพท์")]
     public string Phone_number { get; set; }
-
-    [Required(ErrorMessage = "กรุณากรอกรหัสผ่าน")]
     public string Password { get; set; }
-
     public bool RememberMe { get; set; }
 }
 

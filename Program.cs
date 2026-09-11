@@ -3,7 +3,6 @@ using WebApplication1.Models.Db;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDistributedMemoryCache();
@@ -12,6 +11,9 @@ builder.Services.AddSession(options => {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<Csi402dbContext>(options =>
     options.UseMySql(
@@ -30,7 +32,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseSession(); // เปิดใช้งาน Session
+app.UseSession();
 
 app.UseAuthorization();
 

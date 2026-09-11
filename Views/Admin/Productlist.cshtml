@@ -1,0 +1,201 @@
+@model IEnumerable<WebApplication1.Models.Db.Product>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "จัดการสินค้า";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0 fw-bold text-dark" style="letter-spacing: -0.5px;">
+            <i class="bi bi-box text-success me-2"></i>จัดการสินค้า
+        </h2>
+        <a asp-controller="Admin" asp-action="CreateProduct"
+           class="btn btn-success rounded-pill px-4 shadow-sm fw-semibold">
+            <i class="bi bi-plus-lg me-1"></i> Add Product
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            
+            <div class="row mb-4 align-items-end bg-light p-3 rounded-3 mx-0">
+                <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
+                    <label class="form-label text-muted small fw-bold text-uppercase mb-1">
+                        <i class="bi bi-funnel me-1"></i>Filter by Category
+                    </label>
+                    <select id="categoryFilter" class="form-select form-select-sm shadow-none border-secondary">
+                        <option value="">All Categories (ทั้งหมด)</option>
+                        </select>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
+                    <label class="form-label text-muted small fw-bold text-uppercase mb-1">
+                        <i class="bi bi-box-seam me-1"></i>Stock Status
+                    </label>
+                    <select id="stockFilter" class="form-select form-select-sm shadow-none border-secondary">
+                        <option value="">All Status (ทั้งหมด)</option>
+                        <option value="In Stock">In Stock (มีสินค้า)</option>
+                        <option value="Low Stock">Low Stock (ใกล้หมด)</option>
+                        <option value="Out of Stock">Out of Stock (หมดสต็อก)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 w-100" id="productTable">
+                    <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <tr>
+                            <th class="text-center border-bottom-0 rounded-start">Image</th>
+                            <th class="border-bottom-0">Id</th>
+                            <th class="border-bottom-0">Name</th>
+                            <th class="border-bottom-0">Category</th>
+                            <th class="border-bottom-0">Price</th>
+                            <th class="border-bottom-0">Stock</th>
+                            <th class="text-center border-bottom-0 rounded-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" alt="@item.ProductName" class="rounded shadow-sm"
+                                                 style="width: 45px; height: 45px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light rounded d-flex justify-content-center align-items-center mx-auto"
+                                                 style="width: 45px; height: 45px;">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="fw-bold text-secondary">@item.ProductId</td>
+                                    <td class="fw-semibold text-dark">@item.ProductName</td>
+                                    <td>
+                                        <span class="badge border border-secondary text-secondary rounded-pill px-3 py-2 bg-transparent">@item.CategoryName</span>
+                                    </td>
+                                    <td class="fw-bold text-success">
+                                        ฿@item.ProductPrice.ToString("N2")
+                                    </td>
+                                    <td>
+                                        @if (item.StockQuantity == 0)
+                                        {
+                                            <span class="badge bg-danger rounded-pill px-3 py-2" data-stock-status="Out of Stock">หมดสต็อก</span>
+                                        }
+                                        else if (item.StockQuantity <= 10)
+                                        {
+                                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2" data-stock-status="Low Stock">เหลือ @item.StockQuantity</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success rounded-pill px-3 py-2" data-stock-status="In Stock">@item.StockQuantity</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@item.ProductId"
+                                           class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm me-1">
+                                            <i class="bi bi-pencil-square me-1"></i> Edit
+                                        </a>
+                                        <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@item.ProductId"
+                                           class="btn btn-sm btn-danger rounded-pill px-3 shadow-sm"
+                                           onclick="return confirm('คุณต้องการลบสินค้า @item.ProductName ใช่หรือไม่?');">
+                                            <i class="bi bi-trash me-1"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    
+    <style>
+        .dataTables_wrapper .row { align-items: center; margin-bottom: 0.5rem; }
+        .dataTables_length select { border-radius: 20px; padding-left: 10px; }
+        .dataTables_filter input { border-radius: 20px; padding: 4px 15px; }
+        .page-item.active .page-link { background-color: #198754; border-color: #198754; }
+        .page-link { border-radius: 8px; margin: 0 2px; color: #495057; }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Custom Search Function สำหรับ Stock Filter
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    var stockFilter = $('#stockFilter').val();
+                    if (!stockFilter) return true;
+
+                    // ดึงข้อความดิบๆ จากคอลัมน์ที่ 6 (Index 5 คือ Stock)
+                    var stockText = data[5] || "";
+
+                    if (stockFilter === "Out of Stock") {
+                        return stockText.includes("หมดสต็อก");
+                    }
+                    else if (stockFilter === "Low Stock") {
+                        return stockText.includes("เหลือ");
+                    }
+                    else if (stockFilter === "In Stock") {
+                        return !stockText.includes("หมดสต็อก") && !stockText.includes("เหลือ");
+                    }
+                    return true;
+                }
+            );
+
+            // Initialize DataTable
+            var table = $('#productTable').DataTable({
+                "language": {
+                    "lengthMenu": "Show _MENU_ entries",
+                    "search": "Search:",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                    "paginate": {
+                        "first": "First",
+                        "last": "Last",
+                        "next": "Next",
+                        "previous": "Previous"
+                    }
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "columnDefs": [
+                    { "orderable": false, "targets": [0, 6] } // ปิดเรียงลำดับคอลัมน์รูปและปุ่ม Action
+                ]
+            });
+
+            // ดึงข้อมูลหมวดหมู่มาใส่ Dropdown แบบอัตโนมัติจากในตาราง
+            var uniqueCategories = [];
+            table.column(3).data().each(function (value, index) {
+                var text = $('<div>' + value + '</div>').text().trim();
+                if (text && uniqueCategories.indexOf(text) === -1) {
+                    uniqueCategories.push(text);
+                    $('#categoryFilter').append('<option value="' + text + '">' + text + '</option>');
+                }
+            });
+
+            // เมื่อเลือกหมวดหมู่ ให้ DataTables ค้นหา
+            $('#categoryFilter').on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                table.column(3).search(val ? '^' + val + '$' : '', true, false).draw();
+            });
+
+            // เมื่อเลือกสถานะสต็อก ให้ DataTables วาดตารางใหม่
+            $('#stockFilter').on('change', function () {
+                table.draw();
+            });
+        });
+    </script>
+}

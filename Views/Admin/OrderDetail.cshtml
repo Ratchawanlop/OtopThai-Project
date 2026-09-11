@@ -1,0 +1,221 @@
+@model WebApplication1.Models.Db.Order
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "จัดการคำสั่งซื้อ #" + Model.OrderId;
+}
+
+<style>
+    body {
+        background-color: #f4f6f8; /* สีพื้นหลังให้ดูสบายตาแบบระบบ Admin */
+    }
+    .admin-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: none;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    .admin-card-header {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        color: #2b3445;
+        display: flex;
+        align-items: center;
+    }
+    .product-img-sm {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+    .summary-text {
+        color: #7d879c;
+        font-size: 0.95rem;
+    }
+    .slip-thumbnail {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px dashed #d1d5db;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .slip-thumbnail:hover {
+        opacity: 0.85;
+        border-color: #0d6efd;
+    }
+    .icon-box {
+        width: 32px;
+        height: 32px;
+        background: #f3f5f9;
+        color: #4b566b;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+</style>
+
+<div class="container-fluid py-4 max-w-7xl">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-3 mb-1">
+                <h3 class="fw-bold text-dark mb-0">Order #@Model.OrderId</h3>
+                <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">@Model.TrackingStatus</span>
+            </div>
+            <p class="text-muted small mb-0"><i class="bi bi-calendar-event me-1"></i> สั่งซื้อเมื่อ: @Model.OrderDatetime?.ToString("dd MMM yyyy, HH:mm น.")</p>
+        </div>
+        <a asp-action="OrderList" class="btn btn-light border shadow-sm btn-sm px-3 py-2 fw-bold text-secondary">
+            <i class="bi bi-arrow-left me-1"></i> กลับหน้ารายการ
+        </a>
+    </div>
+
+    <div class="row gx-4">
+        
+        <div class="col-lg-8">
+            
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div class="icon-box"><i class="bi bi-box-seam"></i></div>
+                    รายการสินค้า
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead class="border-bottom text-muted small text-uppercase">
+                            <tr>
+                                <th class="fw-semibold pb-3">สินค้า</th>
+                                <th class="fw-semibold pb-3 text-center">ราคา/ชิ้น</th>
+                                <th class="fw-semibold pb-3 text-center">จำนวน</th>
+                                <th class="fw-semibold pb-3 text-end">รวม</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr class="border-bottom">
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img src="@(string.IsNullOrEmpty(item.Product?.ImageUrl) ? "https://via.placeholder.com/60" : item.Product.ImageUrl)" class="product-img-sm me-3" alt="">
+                                            <span class="fw-semibold text-dark">@item.Product?.ProductName</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 text-center text-muted">฿@item.UnitPrice.ToString("N2")</td>
+                                    <td class="py-3 text-center text-muted">x @item.Quantity</td>
+                                    <td class="py-3 text-end fw-semibold text-dark">฿@((item.UnitPrice * item.Quantity).ToString("N2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row justify-content-end mt-4 pt-3">
+                    <div class="col-md-6 col-lg-5">
+                        <div class="d-flex justify-content-between mb-2 summary-text">
+                            <span>ราคาสินค้ารวม</span>
+                            <span class="text-dark fw-medium">฿@Model.Subtotal?.ToString("N2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 summary-text">
+                            <span>ส่วนลด</span>
+                            <span class="text-danger fw-medium">- ฿@Model.DiscountAmount?.ToString("N2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 summary-text">
+                            <span>ค่าจัดส่ง</span>
+                            <span class="text-dark fw-medium">฿@Model.ShippingCost?.ToString("N2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                            <span class="fw-bold text-dark fs-6">ยอดสุทธิ</span>
+                            <h4 class="fw-bold text-success mb-0">฿@Model.NetAmount?.ToString("N2")</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card bg-light border-0">
+                <div class="admin-card-header mb-3">
+                    <div class="icon-box bg-white"><i class="bi bi-gear"></i></div>
+                    จัดการออเดอร์
+                </div>
+                <div class="d-flex gap-2">
+                    @if (Model.TrackingStatus == "รอชำระเงิน") {
+                        <button class="btn btn-success px-4 py-2 fw-bold shadow-sm">ยืนยันการชำระเงิน</button>
+                        <button class="btn btn-outline-danger px-4 py-2 fw-bold bg-white">ยกเลิกคำสั่งซื้อ</button>
+                    } else if (Model.TrackingStatus == "เตรียมจัดส่ง") {
+                        <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm">ยืนยันการจัดส่ง</button>
+                    } else {
+                        <div class="alert alert-success mb-0 w-100 d-flex align-items-center" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            ออเดอร์นี้ดำเนินการเสร็จสิ้นแล้ว ไม่สามารถแก้ไขสถานะได้
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+            
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div class="icon-box"><i class="bi bi-person"></i></div>
+                    ข้อมูลลูกค้า
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                        @(Model.User?.Username?.Substring(0, 1).ToUpper() ?? "U")
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">@Model.User?.Username</h6>
+                        <span class="text-muted small">ลูกค้าทั่วไป</span>
+                    </div>
+                </div>
+                <hr class="text-muted opacity-25">
+                <div class="mb-2">
+                    <i class="bi bi-envelope text-muted me-2"></i>
+                    <a href="mailto:@Model.User?.Email" class="text-decoration-none text-dark small">@Model.User?.Email</a>
+                </div>
+                <div>
+                    <i class="bi bi-telephone text-muted me-2"></i>
+                    <span class="text-dark small">@(Model.User?.PhoneNumber ?? "ไม่ได้ระบุเบอร์โทรศัพท์")</span>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+                    สถานที่จัดส่ง
+                </div>
+                <p class="text-muted small mb-0 lh-lg">
+                    @(string.IsNullOrEmpty(Model.ShippingAddress) ? "ไม่ได้ระบุข้อมูลการจัดส่ง" : Model.ShippingAddress)
+                </p>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div class="icon-box"><i class="bi bi-receipt"></i></div>
+                    หลักฐานการโอนเงิน
+                </div>
+                @if (!string.IsNullOrEmpty(Model.PaymentSlipUrl)) {
+                    <a href="@Model.PaymentSlipUrl" target="_blank" title="คลิกเพื่อดูรูปเต็ม">
+                        <img src="@Model.PaymentSlipUrl" class="slip-thumbnail" alt="Payment Slip">
+                    </a>
+                    <div class="text-center mt-2">
+                        <span class="badge bg-light text-secondary border"><i class="bi bi-zoom-in me-1"></i>คลิกที่รูปเพื่อขยาย</span>
+                    </div>
+                } else {
+                    <div class="text-center py-4 rounded" style="background-color: #f9f9fa; border: 1px dashed #ddd;">
+                        <i class="bi bi-image text-muted fs-3 mb-2 d-block"></i>
+                        <span class="text-muted small">ยังไม่มีหลักฐานการชำระเงิน</span>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

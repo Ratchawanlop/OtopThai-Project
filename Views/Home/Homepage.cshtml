@@ -3,11 +3,13 @@
     ViewData["Title"] = "หน้าแรก";
 }
 
-<div id="promoCarousel" class="carousel slide mb-5 shadow-sm" data-bs-ride="carousel">
+<div id="promoCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
         <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="3"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="4"></button>
     </div>
     <div class="carousel-inner rounded" style="background-color: var(--otop-green); color: white;">
         <div class="carousel-item active py-5 text-center">
@@ -15,31 +17,62 @@
                 <i class="bi bi-truck display-1 text-warning mb-3"></i>
                 <h1 class="fw-bold">ส่งฟรีทั่วไทย!!</h1>
                 <p class="fs-4">เมื่อซื้อสินค้าครบ 1,000 บาทขึ้นไป</p>
-                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ช้อปเลย</a>
+                <a asp-controller="Home" asp-action="Product" class="btn btn-warning rounded-pill px-4 mt-3">ช้อปเลย</a>
             </div>
         </div>
+
         <div class="carousel-item py-5 text-center">
             <div class="py-5">
                 <i class="bi bi-basket display-1 text-warning mb-3"></i>
-                <h1 class="fw-bold">ลดทันที 10%</h1>
-                <p class="fs-4">สำหรับสินค้างานสานและผ้าทอมือ เมื่อซื้อครบ 2,000 บาท</p>
-                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ดูสินค้างานสาน</a>
+                <h1 class="fw-bold">งานสานลด 10%</h1>
+                <p class="fs-4">เมื่อซื้อสินค้าจากการสานทอมือ ครบ 2,000 บาท</p>
+                <a asp-controller="Home" asp-action="Product" asp-route-category="งานสาน"
+                       class="btn btn-warning rounded-pill px-4 mt-3">
+                    ดูสินค้างานสาน
+                </a>
             </div>
         </div>
+
+        <div class="carousel-item py-5 text-center">
+            <div class="py-5">
+                <i class="bi bi-palette display-1 text-warning mb-3"></i>
+                <h1 class="fw-bold">ผ้าทอมือลด 10%</h1>
+                <p class="fs-4">เมื่อซื้อสินค้าจากการทอมือ ครบ 2,000 บาท</p>
+                <a asp-controller="Home" asp-action="Product" asp-route-category="ผ้าทอมือ"
+                       class="btn btn-warning rounded-pill px-4 mt-3">
+                    ดูผ้าทอมือ
+                </a>
+            </div>
+        </div>
+
         <div class="carousel-item py-5 text-center">
             <div class="py-5">
                 <i class="bi bi-gift display-1 text-warning mb-3"></i>
                 <h1 class="fw-bold">ของที่ระลึกลด 7%</h1>
                 <p class="fs-4">เพียงซื้อสินค้าหมวดของที่ระลึกครบ 1,000 บาท</p>
-                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ดูของที่ระลึก</a>
+                <a asp-controller="Home" asp-action="Product" asp-route-category="ของที่ระลึก"
+                       class="btn btn-warning rounded-pill px-4 mt-3">
+                    ดูของที่ระลึก
+                </a>
+            </div>
+        </div>
+
+        <div class="carousel-item py-5 text-center">
+            <div class="py-5">
+                <i class="bi bi-stars display-1 text-warning mb-3"></i>
+                <h1 class="fw-bold">โปรจับคู่สุดคุ้ม!</h1>
+                <p class="fs-4">รับส่วนลดพิเศษ 5-15% เมื่อซื้อสินค้างานสานทอมือคู่กับสินค้าที่ระลึก</p>
+                <a href="#" class="btn btn-warning rounded-pill px-4 mt-3">ดูโปรโมชั่น</a>
             </div>
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
     </button>
 </div>
 
@@ -47,23 +80,26 @@
     <h3 class="fw-bold mb-4" style="color: var(--otop-green);">หมวดหมู่สินค้าของเรา</h3>
     <div class="row g-4 justify-content-center">
         <div class="col-md-3 col-6">
-            <a href="#" class="text-decoration-none text-dark">
+            <a asp-controller="Home" asp-action="Product" asp-route-category="งานสาน"
+                   class="text-decoration-none text-dark">
                 <div class="p-4 bg-white rounded shadow-sm border card-product">
-                    <i class="bi bi-basket3 fs-1 text-success mb-2"></i>
+                    <i class="bi bi-basket fs-1 text-success mb-2"></i>
                     <h5 class="mt-2">งานสาน</h5>
                 </div>
             </a>
         </div>
         <div class="col-md-3 col-6">
-            <a href="#" class="text-decoration-none text-dark">
+            <a asp-controller="Home" asp-action="Product" asp-route-category="ผ้าทอมือ"
+                   class="text-decoration-none text-dark">
                 <div class="p-4 bg-white rounded shadow-sm border card-product">
-                    <i class="bi bi-scissors fs-1 text-danger mb-2"></i>
+                    <i class="bi bi-palette fs-1 text-danger mb-2"></i>
                     <h5 class="mt-2">ผ้าทอมือ</h5>
                 </div>
             </a>
         </div>
         <div class="col-md-3 col-6">
-            <a href="#" class="text-decoration-none text-dark">
+            <a asp-controller="Home" asp-action="Product" asp-route-category="ของที่ระลึก"
+                   class="text-decoration-none text-dark">
                 <div class="p-4 bg-white rounded shadow-sm border card-product">
                     <i class="bi bi-gift fs-1 text-warning mb-2"></i>
                     <h5 class="mt-2">ของที่ระลึก</h5>
@@ -76,93 +112,99 @@
 <div class="container mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0" style="color: var(--otop-green);">สินค้ายอดนิยม</h3>
-        <a href="#" class="text-success text-decoration-none">ดูทั้งหมด <i class="bi bi-arrow-right"></i></a>
+        <a asp-controller="Home" asp-action="Product" class="text-success text-decoration-none">
+            ดูทั้งหมด <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
     
     <div class="row g-4">
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-0 shadow-sm card-product">
-                <img src="https://www.otopchiangmai.com/uploads/3002e6a26cbe255e70924eb483737a9e.jpg" class="card-img-top" alt="กระเป๋าสาน" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6">กระเป๋าสาน</h5>
-                    <p class="text-success fw-bold fs-5 mb-2">฿490</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-0 shadow-sm card-product">
-                <img src="https://mpics.mgronline.com/pics/Images/551000001738201.JPEG" class="card-img-top" alt="ผ้าถุงทอมือ" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6">ผ้าถุงทอมือ</h5>
-                    <p class="text-success fw-bold fs-5 mb-2">฿650</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-0 shadow-sm card-product">
-                <img src="https://otopth.com/wp-content/uploads/2023/08/Untitled-3-300x164.png" class="card-img-top" alt="ชุดเซ็ตสมุนไพร" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6">ชุดเซ็ตสมุนไพร</h5>
-                    <p class="text-success fw-bold fs-5 mb-2">฿390</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-0 shadow-sm card-product">
-                <img src="https://www.otopchiangmai.com/uploads/8c9e2ace19000131f84330f718b7f327.jpg" class="card-img-top" alt="ตุ๊กตา Re-cycle" style="height: 200px; object-fit: cover;">
-                <div class="card-body text-center">
-                    <h5 class="card-title fs-6">ตุ๊กตา Re-cycle</h5>
-                    <p class="text-success fw-bold fs-5 mb-2">฿299</p>
-                    <button class="btn btn-outline-success w-100 rounded-pill"><i class="bi bi-cart-plus"></i> หยิบใส่ตะกร้า</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card">
+                        <div class="position-relative">
+                            <img src="@item.ImageUrl" class="card-img-top" alt="@item.ProductName"
+                                 style="height: 220px; object-fit: cover;">
+                            <div class="badge bg-danger position-absolute top-0 end-0 m-3 shadow-sm">Popular</div>
+                        </div>
 
-<div class="container-fluid bg-white py-5 mt-5 border-top shadow-sm">
-    <div class="container text-center py-4">
-        <h6 class="text-warning fw-bold mb-2" style="letter-spacing: 2px;">WELCOME TO สินค้า OTOP</h6>
-        <h2 class="fw-bold mb-4" style="color: var(--otop-green);">OTOP คืออะไร?</h2>
-        
-        <p class="text-muted mx-auto mb-5" style="max-width: 800px; line-height: 1.8; font-size: 1.1rem;">
-            <strong>OTOP</strong> ย่อมาจาก คำว่า <strong>“One Tambon One Product”</strong> ซึ่งแปลเป็นไทยคือ “หนึ่งตำบล หนึ่งผลิตภัณฑ์” 
-            เป็นโครงการที่มีวัตถุประสงค์ในการส่งเสริมและพัฒนาการผลิตสินค้าท้องถิ่นในระดับตำบลของประเทศไทย 
-            โดยเน้นการนำความเป็นเอกลักษณ์ของแต่ละพื้นที่มาพัฒนาเป็น <strong>ผลิตภัณฑ์ OTOP</strong> ที่มีคุณค่าและความน่าสนใจ 
-            เพื่อเสริมสร้างรายได้ให้กับชุมชนท้องถิ่น
-        </p>
-        
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="overflow-hidden rounded shadow-sm">
-                    <img src="https://nst.or.th/wp-content/uploads/2024/03/people-wearing-asian-conical-hats-while-sitting-bamboo-bench_181624-13569_11zon.webp" 
-                         class="img-fluid w-100" alt="งานสานท้องถิ่น" 
-                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
-                         onmouseover="this.style.transform='scale(1.08)'" 
-                         onmouseout="this.style.transform='scale(1)'" />
+                        <div class="card-body text-center p-3">
+                            <h6 class="fw-bold text-dark mb-1 text-truncate">@item.ProductName</h6>
+                            <p class="text-muted small mb-2">@item.CategoryName</p>
+                            <h5 class="text-success fw-bold">฿@item.ProductPrice.ToString("N2")</h5>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pb-3 text-center">
+                            <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@item.ProductId"
+                                   class="btn btn-outline-success btn-sm rounded-pill w-100">
+                                ดูรายละเอียด
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="overflow-hidden rounded shadow-sm">
-                    <img src="https://www.khoksumrongmuni.go.th/wp-content/uploads/2023/02/DSCF5532-scaled-2.jpg" 
-                         class="img-fluid w-100" alt="งานผ้าทอมือ" 
-                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
-                         onmouseover="this.style.transform='scale(1.08)'" 
-                         onmouseout="this.style.transform='scale(1)'" />
+            }
+        }
+    </div>
+
+    <div class="container-fluid bg-white py-5 mt-5 border-top shadow-sm">
+        <div class="container text-center py-4">
+            <h6 class="text-warning fw-bold mb-2" style="letter-spacing: 2px;">WELCOME TO สินค้า OTOP</h6>
+            <h2 class="fw-bold mb-4" style="color: var(--otop-green);">OTOP คืออะไร?</h2>
+        
+            <p class="text-muted mx-auto mb-5" style="max-width: 800px; line-height: 1.8; font-size: 1.1rem;">
+                <strong>OTOP</strong> ย่อมาจาก คำว่า <strong>“One Tambon One Product”</strong> ซึ่งแปลเป็นไทยคือ
+                “หนึ่งตำบล
+                หนึ่งผลิตภัณฑ์”
+                เป็นโครงการที่มีวัตถุประสงค์ในการส่งเสริมและพัฒนาการผลิตสินค้าท้องถิ่นในระดับตำบลของประเทศไทย
+                โดยเน้นการนำความเป็นเอกลักษณ์ของแต่ละพื้นที่มาพัฒนาเป็น <strong>ผลิตภัณฑ์ OTOP</strong>
+                ที่มีคุณค่าและความน่าสนใจ
+                เพื่อเสริมสร้างรายได้ให้กับชุมชนท้องถิ่น
+            </p>
+        
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="overflow-hidden rounded shadow-sm">
+                        <img src="https://nst.or.th/wp-content/uploads/2024/03/people-wearing-asian-conical-hats-while-sitting-bamboo-bench_181624-13569_11zon.webp"
+                             class="img-fluid w-100" alt="งานสานท้องถิ่น"
+                             style="height: 280px; object-fit: cover; transition: transform 0.4s ease;"
+                             onmouseover="this.style.transform='scale(1.08)'"
+                             onmouseout="this.style.transform='scale(1)'" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="overflow-hidden rounded shadow-sm">
-                    <img src="https://fa2.naxapi.com/phaikhodon.go.th/dnm_file/news/1726736433310_g395521.jpg" 
-                         class="img-fluid w-100" alt="ของที่ระลึก" 
-                         style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" 
-                         onmouseover="this.style.transform='scale(1.08)'" 
-                         onmouseout="this.style.transform='scale(1)'" />
+                <div class="col-md-4">
+                    <div class="overflow-hidden rounded shadow-sm">
+                        <img src="https://www.khoksumrongmuni.go.th/wp-content/uploads/2023/02/DSCF5532-scaled-2.jpg"
+                             class="img-fluid w-100" alt="งานผ้าทอมือ"
+                             style="height: 280px; object-fit: cover; transition: transform 0.4s ease;"
+                             onmouseover="this.style.transform='scale(1.08)'"
+                             onmouseout="this.style.transform='scale(1)'" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="overflow-hidden rounded shadow-sm">
+                        <img src="https://fa2.naxapi.com/phaikhodon.go.th/dnm_file/news/1726736433310_g395521.jpg"
+                             class="img-fluid w-100" alt="ของที่ระลึก"
+                             style="height: 280px; object-fit: cover; transition: transform 0.4s ease;"
+                             onmouseover="this.style.transform='scale(1.08)'"
+                             onmouseout="this.style.transform='scale(1)'" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        var successMessage = @Html.Raw(Json.Serialize(TempData["Success"])); if (successMessage) {
+        Swal.fire({
+        icon: 'success',
+        title: 'เข้าสู่ระบบสำเร็จ!',
+        text: successMessage,
+        timer: 3000,
+        showConfirmButton: false
+        });
+        }
+        });
+    </script>

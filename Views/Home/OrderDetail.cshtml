@@ -1,0 +1,100 @@
+@model WebApplication1.Models.Db.Order
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "รายละเอียดคำสั่งซื้อ";
+}
+
+<style>
+    body {
+
+        background-color: #fbfaf6;
+    }
+    .detail-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        border: 1px solid #eee;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+
+    .product-img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-dark mb-0">รายละเอียดคำสั่งซื้อ</h3>  
+                <a asp-controller="Home" asp-action="OrderHistory" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> กลับไปหน้าประวัติ
+                </a>
+            </div>
+
+            <div class="detail-card">
+                <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
+                    <div>
+                        <h5 class="fw-bold mb-1">Order #@Model.OrderId</h5>
+                        <p class="text-muted small mb-0">สั่งซื้อเมื่อ: @Model.OrderDatetime?.ToString("dd MMM yyyy, HH:mm")
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success px-3 py-2">@Model.TrackingStatus</span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mb-3">รายการสินค้า:</h6>
+                @if (Model.OrderItems != null)
+                {
+                    decimal grandTotal = 0;
+                    foreach (var item in Model.OrderItems)
+                    {
+                        var productTotal = item.UnitPrice * item.Quantity;
+                        grandTotal += productTotal;
+
+                        <div class="d-flex align-items-center mb-3">
+                            @if (item.Product != null && !string.IsNullOrEmpty(item.Product.ImageUrl))
+                            {
+                                <img src="@item.Product.ImageUrl" class="product-img me-3" alt="">
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/70?text=No+Image" class="product-img me-3" alt="">
+                            }
+                            
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">@(item.Product?.ProductName ?? "สินค้าไม่ทราบชื่อ")</h6>
+                                <p class="text-muted small mb-0">฿@item.UnitPrice.ToString("N2") x @item.Quantity</p>
+                            </div>
+                            <div class="text-end fw-bold">
+                                ฿@productTotal.ToString("N2")
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="fw-bold text-muted">ยอดรวมสุทธิ</span>
+                        <h4 class="fw-bold text-success mb-0">฿@grandTotal.ToString("N2")</h4>
+                    </div>
+                }
+            </div>
+
+            <div class="detail-card">
+                <h6 class="fw-bold mb-3"><i class="bi bi-truck me-2"></i>ข้อมูลการจัดส่ง</h6>
+                <p class="text-muted mb-0">
+                    <strong>ที่อยู่จัดส่ง:</strong> <br />
+                    @(string.IsNullOrEmpty(Model.ShippingAddress) ? "ไม่ได้ระบุข้อมูลการจัดส่ง" : Model.ShippingAddress)
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

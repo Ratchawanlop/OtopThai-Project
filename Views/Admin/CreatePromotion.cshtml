@@ -1,0 +1,36 @@
+@model WebApplication1.Models.Db.Promotion
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 mx-auto" style="max-width: 600px;">
+        <div class="card-body p-5">
+            <h3 class="fw-bold mb-4 text-center">เพิ่มโปรโมชั่นใหม่</h3>
+            <form asp-action="CreatePromotion" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">ชื่อโปรโมชั่น</label>
+                    <input asp-for="PromotionName" class="form-control" placeholder="เช่น ลดกระหน่ำซัมเมอร์" required />
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">ประเภท</label>
+                        <select asp-for="PromotionType" class="form-select">
+                            <option value="Percentage">เปอร์เซ็นต์ (%)</option>
+                            <option value="Fixed">จำนวนเงินคงที่</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">ส่วนลด</label>
+                        <input asp-for="DiscountValue" type="number" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold">วันที่สิ้นสุด</label>
+                    <input asp-for="EndDate" type="date" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold shadow-sm">บันทึกโปรโมชั่น</button>
+            </form>
+        </div>
+    </div>
+</div>

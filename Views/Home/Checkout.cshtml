@@ -1,0 +1,198 @@
+@model WebApplication1.Models.Db.Order
+@{
+    Layout = "_Aomsin";
+    ViewData["Title"] = "ยืนยันคำสั่งซื้อและชำระเงิน";
+}
+
+<style>
+    .hover-lift { transition: transform 0.2s ease-in-out; }
+    .hover-lift:hover { transform: translateY(-2px); }
+    .tracking-wide { letter-spacing: 0.5px; }
+</style>
+
+<div class="container py-5">
+    <h3 class="fw-bold mb-4" style="color: var(--otop-green, #2b5d34);">ยืนยันคำสั่งซื้อและชำระเงิน</h3>
+
+    <form asp-controller="Home" asp-action="SubmitCheckout" method="post" enctype="multipart/form-data">
+        <div class="row g-4">
+            
+            <div class="col-lg-8">
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold text-success mb-0">
+                            <i class="bi bi-geo-alt-fill me-2"></i>ข้อมูลการจัดส่ง
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="ShippingOption" id="useDefaultAddress" value="default" checked onchange="toggleAddressInput()">
+                            <label class="form-check-label w-100" for="useDefaultAddress">
+                                <span class="fw-bold text-dark">ใช้ที่อยู่ปัจจุบัน</span>
+                                <div class="text-muted mt-2 p-3 bg-light rounded" style="border-left: 4px solid var(--otop-green, #2b5d34);">
+                                    @(ViewBag.UserAddress ?? "ยังไม่มีข้อมูลที่อยู่ปัจจุบัน กรุณาระบุใหม่ด้านล่าง")
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="ShippingOption" id="useNewAddress" value="new" onchange="toggleAddressInput()">
+                            <label class="form-check-label" for="useNewAddress">
+                                <span class="fw-bold text-dark">ระบุที่อยู่จัดส่งใหม่</span>
+                            </label>
+                        </div>
+
+                        <div id="newAddressContainer" class="mb-2" style="display: none;">
+                            <label for="address" class="form-label text-muted fw-medium">
+                                ที่อยู่จัดส่งแบบละเอียด (บ้านเลขที่, ซอย, ถนน, ตำบล, อำเภอ, จังหวัด, รหัสไปรษณีย์)
+                            </label>
+                            <textarea class="form-control bg-light border-0 focus-ring focus-ring-success" 
+                                      id="address" name="address" rows="4" 
+                                      placeholder="กรุณากรอกที่อยู่สำหรับจัดส่ง..."></textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold text-success mb-0">
+                            <i class="bi bi-credit-card-fill me-2"></i>วิธีการชำระเงิน
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="bankDetailsSection" class="p-4 mb-4 rounded-3" style="background-color: #f8f9fa; border-left: 5px solid #198754;">
+                            <p class="mb-2 fw-bold text-dark fs-5">โอนเงินเข้าบัญชี: ธนาคารกสิกรไทย</p>
+                            <p class="mb-1 text-secondary"><strong>ชื่อบัญชี:</strong> OTOP Thailand</p>
+                            <p class="mb-0 text-success fw-bold fs-4 tracking-wide">เลขที่บัญชี: 123-4-56789-0</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="PaymentMethod" class="form-label fw-medium text-dark">ช่องทางการโอนเงิน</label>
+                            <select class="form-select bg-light border-0" id="PaymentMethod" name="PaymentMethod">
+                                <option value="Mobile Banking">Mobile Banking</option>
+                                <option value="เก็บเงินปลายทาง">เก็บเงินปลายทาง</option> 
+                            </select>
+                        </div>
+
+                        <div class="mb-2" id="slipUploadSection"> 
+                            <label for="slipImage" class="form-label fw-medium text-dark">แนบหลักฐานการโอนเงิน (สลิป)</label>
+                            <input type="file" class="form-control bg-light border-0" id="slipImage" name="slipImage" accept="image/*" required>
+                            <div class="form-text mt-2 text-muted">รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 5MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm position-sticky" style="top: 20px;">
+                    <div class="card p-4 shadow-sm border-0">
+    <h5 class="fw-bold mb-4">สรุปยอดคำสั่งซื้อ</h5>
+
+    <div class="d-flex justify-content-between mb-3">
+    <span class="text-muted">ยอดรวมสินค้า :</span>
+    <span>฿@((Model.Subtotal ?? 0).ToString("N2"))</span>
+</div>
+
+@if (Model.DiscountAmount > 0)
+{
+    <div class="d-flex justify-content-between mb-3" style="color: #198754;">
+        <span>
+            ส่วนลด
+            @* 👇 เปลี่ยนวิธีเช็คเป็นเช็คว่ามีข้อความจริงๆ ใช่ไหม *@
+            @if (!string.IsNullOrEmpty(ViewBag.PromotionName as string))
+            {
+                <small class="text-muted ms-1" style="font-size: 0.85em;">
+                    (@ViewBag.PromotionName)
+                </small>
+            }
+            :
+        </span>
+        <span>-฿@((Model.DiscountAmount ?? 0).ToString("N2"))</span>
+    </div>
+}
+
+<div class="d-flex justify-content-between mb-3">
+    <span class="text-muted">ค่าจัดส่ง :</span>
+    
+    @* เช็คถ้ายอดรวมสินค้าเกิน 1000 บาท หรือ ค่าจัดส่งเป็น 0 ให้แสดงคำว่า "ฟรี" *@
+    @if ((Model.Subtotal ?? 0) >= 1000 || (Model.ShippingCost ?? 0) == 0)
+    {
+        <span class="text-success">ฟรี</span>
+    }
+    else
+    {
+        <span>฿@((Model.ShippingCost ?? 0).ToString("N2"))</span>
+    }
+</div>
+
+<hr class="my-3" />
+
+<div class="d-flex justify-content-between mb-4">
+    <span class="fw-bold fs-5">ยอดที่ต้องชำระ:</span>
+    <span class="fw-bold fs-5">฿@((Model.NetAmount ?? 0).ToString("N2"))</span>
+</div>
+
+                        @if (Model != null && Model.OrderItems != null && Model.OrderItems.Any())
+                        {
+                            <button type="submit" class="btn btn-success w-100 py-3 fw-bold fs-5 rounded-pill shadow-sm hover-lift">
+                                ยืนยันคำสั่งซื้อ
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-secondary w-100 py-3 fw-bold fs-5 rounded-pill shadow-sm" disabled>
+                                ไม่มีสินค้าให้ชำระเงิน
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleAddressInput() {
+        const useNewAddress = document.getElementById('useNewAddress').checked;
+        const addressContainer = document.getElementById('newAddressContainer');
+        const addressInput = document.getElementById('address');
+        
+        if (useNewAddress) {
+            addressContainer.style.display = 'block';
+            addressInput.setAttribute('required', 'required');
+        } else {
+            addressContainer.style.display = 'none';
+            addressInput.removeAttribute('required');
+            addressInput.value = '';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // ให้เช็คที่อยู่ตอนโหลดหน้า
+        toggleAddressInput();
+        
+        // ให้เช็คการชำระเงินตอนโหลดหน้าด้วย (เผื่อกรณีมัน default เป็นเก็บเงินปลายทาง)
+        document.getElementById('PaymentMethod').dispatchEvent(new Event('change'));
+    });
+
+    document.getElementById('PaymentMethod').addEventListener('change', function() {
+        var slipSection = document.getElementById('slipUploadSection');
+        var slipInput = document.getElementById('slipImage'); 
+        var bankDetails = document.getElementById('bankDetailsSection');
+
+        if(this.value === 'เก็บเงินปลายทาง') {
+            // กรณีเก็บเงินปลายทาง -> ซ่อนทั้งหมด
+            if(slipSection) slipSection.style.display = 'none'; 
+            if(slipInput) slipInput.removeAttribute('required'); 
+            if(bankDetails) bankDetails.style.display = 'none'; // ซ่อนเลขบัญชีธนาคาร
+        } else {
+            // กรณีโอนเงิน -> แสดงทั้งหมด
+            if(slipSection) slipSection.style.display = 'block'; 
+            if(slipInput) slipInput.setAttribute('required', 'required'); 
+            if(bankDetails) bankDetails.style.display = 'block'; // โชว์เลขบัญชีธนาคาร
+        }   
+    });
+</script>
