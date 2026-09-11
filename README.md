@@ -28,7 +28,7 @@
 - **Frontend:** HTML5, CSS3, JavaScript / React.js / Vue.js / Tailwind CSS / Bootstrap
 - **Backend:** Node.js / Express.js / Python (Django/FastAPI) / PHP (Laravel)
 - **Database:** MongoDB / MySQL / PostgreSQL
-- **Authentication:** JWT (JSON Web Token) / Firebase Auth
+- **Authentication:** JWT (JSON Web Token) / Auth
 
 ---
 
@@ -37,7 +37,7 @@
 ### 1. ความต้องการของระบบ (Prerequisites)
 - [Node.js](https://nodejs.org/) (เวอร์ชัน 16 ขึ้นไป)
 - [Git](https://git-scm.com/)
-- ระบบฐานข้อมูล (MySQL / MongoDB ขึ้นอยู่กับที่ใช้ในโปรเจกต์)
+- ระบบฐานข้อมูล MySQL
 
 ### 2. ขั้นตอนการติดตั้ง (Installation)
 
