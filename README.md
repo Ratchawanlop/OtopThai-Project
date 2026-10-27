@@ -13,7 +13,7 @@
 ## คุณสมบัติเด่น (Key Features)
 
 - 🔍 **ค้นหาและกรองสินค้า (Search & Filter):** ค้นหาสินค้าตามชื่อ ประเภทสินค้า หรือภูมิภาค/จังหวัด
-- 📦 **ระบบหมวดหมู่สินค้า (Categories):** จัดหมวดหมู่ตามประเภท OTOP (อาหาร, เครื่องดื่ม, ผ้าและเครื่องแต่งกาย, ของใช้/ของตกแต่ง/ของกิมมิก, สมุนไพรที่ไม่ใช่อาหาร)
+- 📦 **ระบบหมวดหมู่สินค้า (Categories):** จัดหมวดหมู่ตามประเภท OTOP (อาหาร, เครื่องดื่ม, ผ้าและเครื่องแต่งกาย, ของใช้/ของตกแต่ง/ของกิมมิก, สมุนไพร)
 - 🛒 **ระบบสั่งซื้อและตะกร้าสินค้า (Shopping Cart & Order):** เลือกซื้อสินค้าและจัดการรายการในตะกร้าได้สะดวก
 - 👤 **ระบบจัดการผู้ใช้งาน (User Management):** รองรับระบบสมาชิกสำหรับผู้ซื้อ และระบบจัดการสำหรับผู้ขาย/เจ้าของร้านค้า
 - 📊 **ระบบจัดการหลังบ้าน (Admin & Vendor Dashboard):** เพิ่ม/แก้ไข/ลบ สินค้า ตรวจสอบสถานะคำสั่งซื้อ และดูรายงานสรุปยอดขาย
@@ -23,21 +23,20 @@
 
 ## เทคโนโลยีที่ใช้ (Tech Stack)
 
-*(ปรับเปลี่ยนให้ตรงตามความจริงในโปรเจกต์ของคุณ)*
-
-- **Frontend:** HTML5, CSS3, JavaScript / React.js / Vue.js / Tailwind CSS / Bootstrap
-- **Backend:** Node.js / Express.js /
-- **Database:** MongoDB / MySQL / PostgreSQL
-- **Authentication:** JWT (JSON Web Token) / Auth
+- **Backend / Framework:** C# (ASP.NET Core MVC)
+- **Frontend:** Razor Views (.cshtml), HTML5, CSS3, JavaScript, Bootstrap / Tailwind CSS
+- **Database:** SQL Server / MySQL (ผ่าน Entity Framework Core)
+- **Authentication:** ASP.NET Core Identity / Cookie Authentication / JWT
 
 ---
 
 ## การติดตั้งและเริ่มใช้งาน (Getting Started)
 
 ### 1. ความต้องการของระบบ (Prerequisites)
-- [Node.js](https://nodejs.org/) (เวอร์ชัน 16 ขึ้นไป)
+- [.NET SDK](https://dotnet.microsoft.com/) (เวอร์ชัน 8.0 หรือ 9.0 ขึ้นไป)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) (พร้อม Workload: ASP.NET and web development) หรือ [VS Code](https://code.visualstudio.com/)
+- ระบบจัดการฐานข้อมูล (เช่น Microsoft SQL Server / MySQL)
 - [Git](https://git-scm.com/)
-- ระบบฐานข้อมูล MySQL
 
 ### 2. ขั้นตอนการติดตั้ง (Installation)
 
