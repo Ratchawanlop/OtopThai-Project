@@ -26,7 +26,7 @@
 *(ปรับเปลี่ยนให้ตรงตามความจริงในโปรเจกต์ของคุณ)*
 
 - **Frontend:** HTML5, CSS3, JavaScript / React.js / Vue.js / Tailwind CSS / Bootstrap
-- **Backend:** Node.js / Express.js / Python (Django/FastAPI) / PHP (Laravel)
+- **Backend:** Node.js / Express.js /
 - **Database:** MongoDB / MySQL / PostgreSQL
 - **Authentication:** JWT (JSON Web Token) / Auth
 
